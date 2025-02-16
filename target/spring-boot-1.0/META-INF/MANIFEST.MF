@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Created-By: IntelliJ IDEA
-Built-By: ductai
-Build-Jdk: Amazon Corretto 22.0.2 - aarch64
-Implementation-Version: 1.0
-Implementation-Vendor-Id: com.laptrinhjavaweb
-Main-Class: ${start-class}
-
