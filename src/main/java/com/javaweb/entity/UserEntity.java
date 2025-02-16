@@ -31,8 +31,8 @@ public class UserEntity extends BaseEntity {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "role_id", nullable = false))
+            joinColumns = @JoinColumn(name = "userid", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "roleid", nullable = false))
     private List<RoleEntity> roles = new ArrayList<>();
 
 
