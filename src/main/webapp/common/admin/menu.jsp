@@ -48,7 +48,7 @@
       <b class="arrow"></b>
       <ul class="submenu">
         <li class="">
-          <a href="/admin/building-list">
+          <a href="/admin/building-search">
             <i class="menu-icon fa fa-caret-right"></i>
             Danh sách tòa nhà
           </a>

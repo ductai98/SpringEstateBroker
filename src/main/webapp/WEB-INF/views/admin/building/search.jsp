@@ -135,9 +135,7 @@
                           <label class="name">Nhân viên</label>
                           <form:select class="form-control" path="staffId">
                             <form:option value="">--Chọn nhân viên--</form:option>
-                            <form:option value="1">Nguyễn Văn A</form:option>
-                            <form:option value="2">Nguyễn Văn B</form:option>
-                            <form:option value="3">Nguyễn Văn C</form:option>
+                            <form:options items="${staffs}"/>
                           </form:select>
                         </div>
                       </div>
