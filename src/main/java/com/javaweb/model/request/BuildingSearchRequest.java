@@ -13,10 +13,10 @@ public class BuildingSearchRequest extends AbstractDTO {
     private Long numberOfBasement;
     private String direction;
     private Long level;
-    private Long areaFrom;
-    private Long areaTo;
-    private Long rentPriceFrom;
-    private Long rentPriceTo;
+    private Long fromArea;
+    private Long toArea;
+    private Long fromPrice;
+    private Long toPrice;
     private String managerName;
     private String managerPhone;
     private Long staffId;
@@ -95,36 +95,36 @@ public class BuildingSearchRequest extends AbstractDTO {
         this.managerPhone = managerPhone;
     }
 
-    public Long getRentPriceFrom() {
-        return rentPriceFrom;
+    public Long getFromPrice() {
+        return fromPrice;
     }
 
-    public void setRentPriceFrom(Long rentPriceFrom) {
-        this.rentPriceFrom = rentPriceFrom;
+    public void setFromPrice(Long fromPrice) {
+        this.fromPrice = fromPrice;
     }
 
-    public Long getRentPriceTo() {
-        return rentPriceTo;
+    public Long getToPrice() {
+        return toPrice;
     }
 
-    public void setRentPriceTo(Long rentPriceTo) {
-        this.rentPriceTo = rentPriceTo;
+    public void setToPrice(Long toPrice) {
+        this.toPrice = toPrice;
     }
 
-    public Long getAreaFrom() {
-        return areaFrom;
+    public Long getFromArea() {
+        return fromArea;
     }
 
-    public void setAreaFrom(Long areaFrom) {
-        this.areaFrom = areaFrom;
+    public void setFromArea(Long fromArea) {
+        this.fromArea = fromArea;
     }
 
-    public Long getAreaTo() {
-        return areaTo;
+    public Long getToArea() {
+        return toArea;
     }
 
-    public void setAreaTo(Long areaTo) {
-        this.areaTo = areaTo;
+    public void setToArea(Long toArea) {
+        this.toArea = toArea;
     }
 
     public Long getStaffId() {
