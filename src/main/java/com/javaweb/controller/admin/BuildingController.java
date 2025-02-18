@@ -1,7 +1,10 @@
 package com.javaweb.controller.admin;
 
 
+import com.javaweb.enums.buildingType;
+import com.javaweb.enums.districtCode;
 import com.javaweb.model.dto.BuildingDTO;
+import com.javaweb.model.request.BuildingAddOrUpdateRequest;
 import com.javaweb.model.request.BuildingSearchRequest;
 import com.javaweb.model.response.BuildingSearchResponse;
 import com.javaweb.service.IUserService;
@@ -51,12 +54,16 @@ public class BuildingController {
 
         mav.addObject("buildings", responses);
         mav.addObject("staffs", userService.getStaffs());
+        mav.addObject("districts", districtCode.type());
+        mav.addObject("typeCodes", buildingType.type());
         return mav;
     }
 
     @GetMapping(value = "/admin/building-edit")
-    public ModelAndView adminBuildingEdit(@ModelAttribute("buildingInfo") BuildingDTO buildingDTO, HttpServletRequest request) {
+    public ModelAndView adminBuildingEdit(@ModelAttribute("buildingInfo") BuildingAddOrUpdateRequest request, HttpServletRequest httpServletRequest) {
         ModelAndView mav = new ModelAndView("admin/building/edit");
+        mav.addObject("districts", districtCode.type());
+        mav.addObject("typeCodes", buildingType.type());
         return mav;
     }
 
@@ -67,6 +74,8 @@ public class BuildingController {
         BuildingDTO buildingDTO = new BuildingDTO();
         buildingDTO.setId(id);
         mav.addObject("buildingInfo", buildingDTO);
+        mav.addObject("districts", districtCode.type());
+        mav.addObject("typeCodes", buildingType.type());
         return mav;
     }
 }

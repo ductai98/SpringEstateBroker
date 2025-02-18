@@ -7,7 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/common/taglib.jsp" %>
-
+<c:url var="buildingApi" value="/api/building" />
 <html>
 <head>
   <title>Thông tin tòa nhà</title>
@@ -40,15 +40,15 @@
 
         <!-- Form edit -->
         <div class="row">
-          <form:form modelAttribute="buildingInfo" id="info-form" method="get">
+          <form:form modelAttribute="buildingInfo" id="info-form">
             <div class="col-xs-12">
-              <form class="form-horizontal" role="form" id="form-edit">
+              <form class="form-horizontal" role="form">
                 <div class="form-group" role="form">
                   <div class="col-xs-3">
                     <label class="name">Tên toà nhà</label>
                   </div>
                   <div class="col-xs-9">
-                    <form:input type="text" class="form-control" path="name"/>
+                    <form:input class="form-control" path="name"/>
                   </div>
                 </div>
 
@@ -59,10 +59,7 @@
                   <div class="col-xs-9">
                     <form:select path="district">
                       <form:option value="">--Chọn quận--</form:option>
-                      <form:option value="1">Quận 1</form:option>
-                      <form:option value="2">Quận 2</form:option>
-                      <form:option value="3">Quận 3</form:option>
-                      <form:option value="4">Quận 4</form:option>
+                      <form:options items="${districts}" />
                     </form:select>
                   </div>
                 </div>
@@ -177,32 +174,10 @@
 
                 <div class="form-group" role="form">
                   <div class="col-xs-3">
-                    <label class="name">Nhân viên</label>
-                  </div>
-                  <div class="col-xs-9">
-                    <form:select class="form-control" path="staffId">
-                      <form:option value="">--Chọn nhân viên--</form:option>
-                      <form:option value="1">Nguyễn Văn A</form:option>
-                      <form:option value="2">Nguyễn Văn B</form:option>
-                      <form:option value="3">Nguyễn Văn C</form:option>
-                    </form:select>
-                  </div>
-                </div>
-
-                <div class="form-group" role="form">
-                  <div class="col-xs-3">
                     <label class="name">Loại tòa nhà</label>
                   </div>
                   <div class="col-xs-4" style="display: flex; flex-direction: row; justify-content: space-between;">
-                    <label class="checkbox-inline">
-                      <input type="checkbox" name="typecode" value="noi-that"/> Nội thất
-                    </label>
-                    <label class="checkbox-inline">
-                      <input type="checkbox" name="typecode" value="nguyen-can"/> Nguyên căn
-                    </label>
-                    <label class="checkbox-inline">
-                      <input type="checkbox" name="typecode" value="tang-tret"/> Tầng trệt
-                    </label>
+                    <form:checkboxes items="${typeCodes}" path="typeCode"/>
                   </div>
                 </div>
 
@@ -210,13 +185,13 @@
                   <div class="col-xs-3"></div>
                   <div class="col-xs-9">
                     <c:if test="${not empty buildingInfo.id}">
-                      <button class="btn btn-xs btn-info" id="btnAddBuilding">
+                      <button class="btn btn-xs btn-info" id="btnAddOrUpdate">
                         <span class="bigger-110 no-text-shadow">Cập nhật thông tin</span>
                       </button>
                     </c:if>
 
                     <c:if test="${empty buildingInfo.id}">
-                      <button class="btn btn-xs btn-info" id="btnAddBuilding">
+                      <button class="btn btn-xs btn-info" id="btnAddOrUpdate">
                         <span class="bigger-110 no-text-shadow">Thêm tòa nhà</span>
                       </button>
                     </c:if>
@@ -225,6 +200,7 @@
                     </button>
                   </div>
                 </div>
+                <form:hidden path="id"/>
               </form>
             </div>
           </form:form>
@@ -233,39 +209,56 @@
     </div>
   </div><!-- /.main-content -->
   <script>
-      $('#btnAddBuilding').click(function () {
-          var data = {};
+    $('#btnAddOrUpdate').click(function (e) {
+      e.preventDefault();
+      var data = {};
 
-          var typecode = [];
+      var typecode = [];
 
-          var formData = $('#form-edit').serializeArray();
+      var formData = $('#info-form').serializeArray();
 
-          $.each(formData, function (index, v) {
-              if (v.name != 'typecode') {
-                  data["'" + v.name + "'"] = v.value;
-              } else {
-                  typecode.push(v.value);
-              }
-          });
-
-          data['typecode'] = typecode;
-
-          console.log("OK")
-
-          $.ajax({
-              type: "POST",
-              url: "localhost:8081/api/building",
-              data: JSON.stringify(data),
-              contentType: "application/json",
-              dataType: "JSON",
-              success: function (response) {
-                  console.log("success");
-              },
-              error: function (error) {
-                  console.log("error");
-              }
-          });
+      $.each(formData, function (index, v) {
+        if (v.name != 'typeCode') {
+            data[v.name] = v.value;
+        } else {
+            typecode.push(v.value);
+        }
       });
+
+      data['typeCode'] = typecode;
+
+      if (typecode.length === 0) {
+        if (data.id == null) {
+          window.location.href = "/admin/building-edit?typeCode=required";
+        } else {
+          window.location.href = "/admin/building-edit-" + data.id + "?typeCode=required";
+        }
+      } else {
+        addOrUpdateBuilding(data);
+      }
+    });
+
+    function addOrUpdateBuilding(data) {
+      $.ajax({
+        type: "POST",
+        url: "${buildingApi}",
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        dataType: "JSON",
+        success: function (response) {
+            console.log({"success": response});
+            console.log(JSON.stringify(data));
+        },
+        error: function (error) {
+            console.log({"error" : error});
+        }
+        });
+    }
+
+    $('#btnCancel').click(function (e) {
+      e.preventDefault();
+      window.location.href = "/admin/building-search";
+    });
   </script>
 </body>
 </html>

@@ -71,11 +71,7 @@
                           <label class="name">Quận</label>
                           <form:select class="form-control" path="district">
                             <form:option value="">--Chọn quận--</form:option>
-                            <form:option value="quan_1">Quận 1</form:option>
-                            <form:option value="quan_2">Quận 2</form:option>
-                            <form:option value="quan_3">Quận 3</form:option>
-                            <form:option value="quan_4">Quận 4</form:option>
-                            <form:option value="quan_10">Quận 10</form:option>
+                            <form:options items="${districts}" />
                           </form:select>
                         </div>
                         <div class="col-xs-5">
@@ -141,16 +137,8 @@
                       </div>
 
                       <div class="col-xs-12">
-                        <div class="col-xs-6">
-                          <label class="checkbox-inline">
-                            <input type="checkbox" name="typeCode" value="noi-that"/> Nội thất
-                          </label>
-                          <label class="checkbox-inline">
-                            <input type="checkbox" name="typeCode" value="nguyen-can"/> Nguyên căn
-                          </label>
-                          <label class="checkbox-inline">
-                            <input type="checkbox" name="typeCode" value="tang-tret"/> Tầng trệt
-                          </label>
+                        <div class="col-xs-6" style="display: flex; flex-direction: row; justify-content: space-between;">
+                          <form:checkboxes items="${typeCodes}" path="typeCode"/>
                         </div>
                       </div>
 
@@ -175,7 +163,7 @@
                 <i class="ace-icon fa fa-plus bigger-120"></i>
               </button>
             </a>
-            <button class="btn btn-sm btn-danger" title="Xóa tòa nhà">
+            <button class="btn btn-sm btn-danger" title="Xóa tòa nhà" id="btnDelete">
               <i class="ace-icon fa fa-trash-o bigger-120"></i>
             </button>
           </div>
@@ -185,7 +173,7 @@
       <!-- Bảng kết quả toà nhà -->
       <div class="row">
         <div class="col-xs-12">
-          <table id="simple-table" class="table table-striped table-bordered table-hover" style="margin: 3em 0 1.5em;">
+          <table id="building-table" class="table table-striped table-bordered table-hover" style="margin: 3em 0 1.5em;">
             <thead>
               <tr>
                 <th class="center">
@@ -253,7 +241,7 @@
                         <i class="ace-icon fa fa-pencil bigger-120"></i>
                       </a>
 
-                      <button class="btn btn-xs btn-danger" title="Xoa toa nha">
+                      <button class="btn btn-xs btn-danger" title="Xoa toa nha" onclick="deleteBuilding(${building.id})">
                         <i class="ace-icon fa fa-trash-o bigger-120"></i>
                       </button>
                     </div>
@@ -343,6 +331,39 @@
       $('#btnSearch').click(function (e) {
           e.preventDefault();
           $('#search-form').submit();
+      });
+
+      function deleteBuilding(buildingId) {
+          var id = [buildingId];
+          deleteBuildings(id);
+      };
+
+      function deleteBuildings(data) {
+
+          console.log(data);
+
+          $.ajax({
+              url: "/api/building/" + data,
+              type: "DELETE",
+              contentType: "application/json",
+              dataType: "JSON",
+              success: function (response) {
+                  console.log("success");
+              },
+              error: function (error) {
+                  console.log("error");
+              }
+          });
+
+      $('#btnDelete').click(function (e) {
+          e.preventDefault();
+          var ids = [];
+          $('#building-table').find('tbody input[type = checkbox]:checked').map(function () {
+              return $(this).val();
+          }).get().forEach(function (id) {
+              ids.push(id);
+          });
+          deleteBuildings(ids);
       });
   </script>
 </body>

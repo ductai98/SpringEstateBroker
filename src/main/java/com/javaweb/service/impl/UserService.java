@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -174,5 +176,13 @@ public class UserService implements IUserService {
             userEntity.setStatus(0);
             userRepository.save(userEntity);
         }
+    }
+
+    @Override
+    public Map<Long, String> getStaffs() {
+        Map<Long, String> map = new HashMap<>();
+        List<UserEntity> staffs = userRepository.findByStatusAndRolesCode(1, "STAFF");
+        staffs.forEach(item -> map.put(item.getId(), item.getFullName()));
+        return map;
     }
 }

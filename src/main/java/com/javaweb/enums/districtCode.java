@@ -2,6 +2,8 @@ package com.javaweb.enums;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public enum  districtCode {
     QUAN_1 ("Quận 1"),
@@ -12,7 +14,11 @@ public enum  districtCode {
     QUAN_6 ("Quận 6"),
     QUAN_7 ("Quận 7"),
     QUAN_8 ("Quận 8"),
-    ;
+    QUAN_PN("Quận Phú Nhuận"),
+    QUAN_TB("Quận Tân Bình"),
+    QUAN_BT("Quận Bình Thạnh"),
+    QUAN_TP("Quận Tân Phú"),
+    QUAN_TD("Quận Thủ Đức");
 
     private final String districtName;
     districtCode(String districtName) {
@@ -28,6 +34,7 @@ public enum  districtCode {
         for(districtCode item : districtCode.values()){
             listType.put(item.toString() , item.districtName);
         }
-        return listType;
+        TreeMap<String, String> result = new TreeMap<>(listType);
+        return result;
     }
 }
