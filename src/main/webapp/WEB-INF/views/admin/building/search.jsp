@@ -262,8 +262,8 @@
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Danh sách nhân viên</h5>
         </div>
-        <div class="modal-body">
-          <table id="staff-list" class="table table-striped table-bordered table-hover" style="margin: 3em 0 1.5em;">
+        <div class="modal-body" id="modal-staff">
+          <table id="staff-list" class="table table-striped table-bordered table-hover">
             <thead>
             <tr>
               <th class="center">
@@ -274,34 +274,33 @@
             </thead>
 
             <tbody>
-            <tr class="center">
-              <td class="center">
-                <label class="pos-rel">
-                  <input type="checkbox" class="ace" value="1" checked>
-                  <span class="lbl"></span>
-                </label>
-              </td>
+              <%--<tr class="center">
+                <td class="center">
+                  <label class="pos-rel">
+                    <input type="checkbox" class="ace" value="12" checked/>
+                    <span class="lbl"></span>
+                  </label>
+                </td>
 
-              <td>
-                Nguyễn Văn A
-              </td>
-            </tr>
+                <td>
+                  Lâm Đức Tài
+                </td>
+              </tr>
 
-            <tr class="center">
-              <td class="center">
-                <label class="pos-rel">
-                  <input type="checkbox" class="ace" value="2">
-                  <span class="lbl"></span>
-                </label>
-              </td>
+              <tr class="center">
+                <td class="center">
+                  <label class="pos-rel">
+                    <input type="checkbox" class="ace" value="13" />
+                    <span class="lbl"></span>
+                  </label>
+                </td>
 
-              <td>
-                Nguyễn Văn B
-              </td>
-            </tr>
+                <td>
+                  Phạm Hoàng Hưng
+                </td>
+              </tr>--%>
             </tbody>
           </table>
-          <input type="hidden" id="buildingId" name="buildingId" value="1"/>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -312,8 +311,44 @@
   </div>
 
   <script>
+
+      function getStaffs(buildingId) {
+          $.ajax({
+            type: "GET",
+            url: "/api/building/" + buildingId + "/staffs",
+            contentType: "application/json",
+            dataType: "JSON",
+            success: function (response) {
+                console.log(response);
+                var row = '';
+                let staffs = response.data;
+                $.each(staffs, function (index, value) {
+                    row += '<tr class="center">';
+                    row += '<td class="center">';
+                    row += '<label class="pos-rel">';
+                    row += '<input type="checkbox" class="ace" value="' + value.staffId + '" ' + value.checked + '/>';
+                    row += '<span class="lbl"></span>';
+                    row += '</label>';
+                    row += '</td>';
+
+                    row += '<td>';
+                    row += value.fullName;
+                    row += '</td>';
+                    row += '</tr>';
+                });
+
+                $('#staff-list tbody').html(row);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+          });
+      }
+
       function assignmentBuilding(buildingId) {
-          $('#assignmentBuildingModal').modal()
+          $('#assignmentBuildingModal').modal();
+          getStaffs(buildingId);
+          $('#buildingId').val();
       }
 
       $('#assignBuilding').click(function (e) {
@@ -342,18 +377,24 @@
 
           console.log(data);
 
+          if (data.length === 0) {
+              console.log("no building select");
+              return;
+          }
+
           $.ajax({
               url: "/api/building/" + data,
               type: "DELETE",
               contentType: "application/json",
               dataType: "JSON",
               success: function (response) {
-                  console.log("success");
+                  console.log({"success": response});
               },
               error: function (error) {
-                  console.log("error");
+                  console.log({"error" : error});
               }
           });
+      }
 
       $('#btnDelete').click(function (e) {
           e.preventDefault();
