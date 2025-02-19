@@ -2,6 +2,7 @@ package com.javaweb.api.admin;
 
 
 import com.javaweb.model.request.BuildingAddOrUpdateRequest;
+import com.javaweb.model.request.BuildingAssignRequest;
 import com.javaweb.model.response.ResponseDTO;
 import com.javaweb.model.response.StaffResponseDTO;
 import com.javaweb.service.IBuildingService;
@@ -34,5 +35,11 @@ public class BuildingAPI {
         responseDTO.setData(staffs);
         responseDTO.setMessage("success");
         return responseDTO;
+    }
+
+    @PostMapping("assign")
+    public ResponseDTO assignStaff(@RequestBody BuildingAssignRequest request){
+        System.out.println("assignStaff: "+ request.getStaffs());
+        return new ResponseDTO();
     }
 }

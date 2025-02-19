@@ -36,9 +36,6 @@ public class BuildingEntity extends BaseEntity {
     @Column(name = "floorarea")
     private Long floorArea;
 
-    @Column(name = "rentarea")
-    private String rentArea;
-
     @Column(name = "emptyarea")
     private Long emptyArea;
 
@@ -54,8 +51,14 @@ public class BuildingEntity extends BaseEntity {
     @Column(name = "managerphonenumber")
     private String managerPhone;
 
-    @Column(name = "typecode")
-    private String typeCode;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "buildingrenttype",
+                joinColumns = @JoinColumn(name = "buildingid", nullable = false),
+                inverseJoinColumns = @JoinColumn(name = "renttypeid", nullable = false))
+    private List<RentTypeEntity> rentTypes = new ArrayList<>();
+
+    @OneToMany(mappedBy="building", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<RentAreaEntity> rentAreas = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "assignmentbuilding",
@@ -70,6 +73,14 @@ public class BuildingEntity extends BaseEntity {
 
     public void setEmptyArea(Long emptyArea) {
         this.emptyArea = emptyArea;
+    }
+
+    public List<RentAreaEntity> getRentAreas() {
+        return rentAreas;
+    }
+
+    public void setRentAreas(List<RentAreaEntity> rentAreas) {
+        this.rentAreas = rentAreas;
     }
 
     public String getName() {
@@ -144,14 +155,6 @@ public class BuildingEntity extends BaseEntity {
         this.floorArea = floorArea;
     }
 
-    public String getRentArea() {
-        return rentArea;
-    }
-
-    public void setRentArea(String rentArea) {
-        this.rentArea = rentArea;
-    }
-
     public Long getRentPrice() {
         return rentPrice;
     }
@@ -184,20 +187,20 @@ public class BuildingEntity extends BaseEntity {
         this.managerPhone = managerPhone;
     }
 
-    public String getTypeCode() {
-        return typeCode;
-    }
-
-    public void setTypeCode(String typeCode) {
-        this.typeCode = typeCode;
-    }
-
     public List<UserEntity> getStaffs() {
         return staffs;
     }
 
     public void setStaffs(List<UserEntity> staffs) {
         this.staffs = staffs;
+    }
+
+    public List<RentTypeEntity> getRentTypes() {
+        return rentTypes;
+    }
+
+    public void setRentTypes(List<RentTypeEntity> rentTypes) {
+        this.rentTypes = rentTypes;
     }
 }
 

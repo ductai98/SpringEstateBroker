@@ -301,10 +301,11 @@
               </tr>--%>
             </tbody>
           </table>
+          <input type="hidden" id="buildingId" name="buildingId" value="1"/>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" data-dismiss="modal" id="assignBuilding">Save changes</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnAssign">Save changes</button>
         </div>
       </div>
     </div>
@@ -348,10 +349,10 @@
       function assignmentBuilding(buildingId) {
           $('#assignmentBuildingModal').modal();
           getStaffs(buildingId);
-          $('#buildingId').val();
+          $('#buildingId').val(buildingId);
       }
 
-      $('#assignBuilding').click(function (e) {
+      $('#btnAssign').click(function (e) {
           e.preventDefault();
           var data = {};
           data['buildingId'] = $('#buildingId').val();
@@ -360,7 +361,19 @@
           }).get();
           data['staffs'] = staffs;
 
-          console.log("OK");
+          $.ajax({
+              url: "/api/building/assign",
+              type: "POST",
+              contentType: "application/json",
+              dataType: "JSON",
+              data: JSON.stringify(data),
+              success: function (response) {
+                  console.log({"success": response});
+              },
+              error: function (error) {
+                  console.log({"error" : error});
+              }
+          });
       });
 
       $('#btnSearch').click(function (e) {
