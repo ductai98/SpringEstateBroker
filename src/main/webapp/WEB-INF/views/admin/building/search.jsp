@@ -184,6 +184,7 @@
                 </th>
                 <th>Tên tòa nhà</th>
                 <th>Địa chỉ</th>
+                <th>Loại tòa nhà</th>
                 <th>Số tầng hầm</th>
                 <th>Tên quản lý</th>
                 <th>SĐT quản lý</th>
@@ -211,6 +212,8 @@
                   </td>
 
                   <td>${building.address}</td>
+
+                  <td>${building.rentType}</td>
 
                   <td>${building.numberOfBasement}</td>
 

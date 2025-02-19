@@ -16,6 +16,8 @@ public class BuildingResponseDTO extends AbstractDTO {
     private Long rentPrice;
     private String serviceFee;
     private Double brokerageFee;
+	private String rentType;
+
 
 	public Long getId() {
 		return id;
@@ -23,6 +25,14 @@ public class BuildingResponseDTO extends AbstractDTO {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getRentType() {
+		return rentType;
+	}
+
+	public void setRentType(String rentType) {
+		this.rentType = rentType;
 	}
 
 	public String getManagerName() {

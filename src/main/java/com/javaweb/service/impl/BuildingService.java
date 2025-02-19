@@ -92,12 +92,16 @@ public class BuildingService implements IBuildingService {
             BuildingResponseDTO buildingResponseDTO = new BuildingResponseDTO();
             buildingResponseDTO.setId(item.getId());
             buildingResponseDTO.setName(item.getName());
+            String rentType = item.getRentTypes().stream().map(
+                    type -> type.getName()
+            ).collect(Collectors.joining(", "));
+            buildingResponseDTO.setRentType(rentType);
             String district = districtCode.valueOf(item.getDistrict()).getDistrictName();
             buildingResponseDTO.setAddress(item.getStreet() + ", " + item.getWard() + ", " + district);
             buildingResponseDTO.setFloorArea(item.getFloorArea());
             String rentArea = item.getRentAreas().stream().map(
                     area->area.getValue().toString()
-            ).collect(Collectors.joining(","));
+            ).collect(Collectors.joining(", "));
             buildingResponseDTO.setRentArea(rentArea);
             buildingResponseDTO.setEmptyArea(item.getEmptyArea());
             buildingResponseDTO.setRentPrice(item.getRentPrice());

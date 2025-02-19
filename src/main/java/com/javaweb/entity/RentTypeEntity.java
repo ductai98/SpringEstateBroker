@@ -5,7 +5,11 @@ import java.util.List;
 
 @Entity
 @Table(name="renttype")
-public class RentTypeEntity extends BaseEntity {
+public class RentTypeEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name="code")
     private String code;
@@ -15,6 +19,14 @@ public class RentTypeEntity extends BaseEntity {
 
     @ManyToMany(mappedBy = "rentTypes", fetch = FetchType.LAZY)
     private List<BuildingEntity> buildings;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getCode() {
         return code;
