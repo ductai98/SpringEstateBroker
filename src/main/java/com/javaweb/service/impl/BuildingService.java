@@ -3,23 +3,29 @@ package com.javaweb.service.impl;
 import com.javaweb.converter.BuildingConverter;
 import com.javaweb.entity.BuildingEntity;
 import com.javaweb.entity.RentAreaEntity;
+import com.javaweb.entity.RentTypeEntity;
 import com.javaweb.entity.UserEntity;
 import com.javaweb.enums.districtCode;
+import com.javaweb.model.dto.BuildingDTO;
+import com.javaweb.model.request.BuildingAddOrUpdateRequest;
 import com.javaweb.model.request.BuildingRequestDTO;
 import com.javaweb.model.response.BuildingResponseDTO;
 import com.javaweb.model.response.StaffResponseDTO;
 import com.javaweb.repository.BuildingRepository;
+import com.javaweb.repository.RentTypeRepository;
 import com.javaweb.repository.UserRepository;
 import com.javaweb.service.IBuildingService;
+import com.javaweb.utils.StringUtils;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class BuildingService implements IBuildingService {
 
     @Autowired
@@ -30,6 +36,64 @@ public class BuildingService implements IBuildingService {
 
     @Autowired
     BuildingConverter buildingConverter;
+
+    @Autowired
+    private RentTypeRepository rentTypeRepository;
+
+    @Override
+    public Long addOrUpdateBuilding(BuildingAddOrUpdateRequest request) {
+
+        BuildingEntity entity = buildingConverter.toBuildingEntity(request);
+
+        List<RentAreaEntity> rentAreaEntities = parseRentArea(request.getRentArea(), entity);
+        
+        entity.setRentAreas(rentAreaEntities);
+
+        List<String> typeCode = request.getTypeCode();
+        Set<RentTypeEntity> updatedRentTypes = parseRentType(typeCode);
+        entity.setRentTypes(updatedRentTypes);
+
+        buildingRepository.save(entity);
+
+        return 0L;
+    }
+
+    List<RentAreaEntity> parseRentArea(String rentArea, BuildingEntity buildingEntity){
+        String[] rentAreaRequest = rentArea.replaceAll(" ", "").split(",");
+        List<RentAreaEntity> rentAreaEntities = new ArrayList<>();
+        for (String item : rentAreaRequest){
+            RentAreaEntity rentAreaEntity = new RentAreaEntity();
+            if (StringUtils.check(item)) {
+                rentAreaEntity.setValue(Long.parseLong(item));
+                rentAreaEntity.setBuilding(buildingEntity);
+            }
+            rentAreaEntities.add(rentAreaEntity);
+        }
+        
+        return rentAreaEntities;
+    }
+
+    Set<RentTypeEntity> parseRentType(List<String> typeCode) {
+        if (typeCode == null || typeCode.isEmpty()){
+            return new HashSet<>();
+        }
+
+        Set<RentTypeEntity> entities = typeCode.stream()
+                .map(code -> rentTypeRepository.findByCode(code)
+                        .orElseThrow(() -> new IllegalArgumentException("type code not found, code = " + code + " ! ")))
+                .collect(Collectors.toSet());
+
+        return entities;
+            
+    }
+
+    @Override
+    public void deleteBuilding(List<Long> ids) {
+        if (ids == null || ids.isEmpty()){
+            throw new IllegalArgumentException("Ids can not be null or empty! ");
+        }
+        buildingRepository.deleteAllByIdIn(ids);
+    }
 
     @Override
     public List<StaffResponseDTO> getStaffs(Long buildingId) {
@@ -61,12 +125,19 @@ public class BuildingService implements IBuildingService {
     @Override
     public List<BuildingResponseDTO> getAll() {
         List<BuildingResponseDTO> result = new ArrayList<>();
-        List<BuildingEntity> buildingEntities = buildingRepository.findAll();
+        List<BuildingEntity> buildingEntities = buildingRepository.findAll().stream().distinct().collect(Collectors.toList());;
         buildingEntities.forEach(item -> {
             BuildingResponseDTO buildingResponseDTO = new BuildingResponseDTO();
             buildingResponseDTO.setId(item.getId());
             buildingResponseDTO.setName(item.getName());
-            String district = districtCode.valueOf(item.getDistrict()).getDistrictName();
+            String district = "";
+            if (item.getDistrict() != null && !item.getDistrict().isEmpty()){
+                district = districtCode.valueOf(item.getDistrict()).getDistrictName();
+            }
+            String rentType = item.getRentTypes().stream().map(
+                    type -> type.getName()
+            ).collect(Collectors.joining(", "));
+            buildingResponseDTO.setRentType(rentType);
             buildingResponseDTO.setAddress(item.getStreet() + ", " + item.getWard() + ", " + district);
             buildingResponseDTO.setFloorArea(item.getFloorArea());
             String rentArea = item.getRentAreas().stream().map(
@@ -86,7 +157,7 @@ public class BuildingService implements IBuildingService {
 
     @Override
     public List<BuildingResponseDTO> findAllBuilding(Map<String, Object> hashMap, List<String> typeCode) {
-        List<BuildingEntity> entities = buildingRepository.findAllBuilding(hashMap,typeCode);
+        List<BuildingEntity> entities = buildingRepository.findAllBuilding(hashMap,typeCode).stream().distinct().collect(Collectors.toList());
         List<BuildingResponseDTO> result = new ArrayList<>();
         entities.forEach(item -> {
             BuildingResponseDTO buildingResponseDTO = new BuildingResponseDTO();
@@ -96,7 +167,11 @@ public class BuildingService implements IBuildingService {
                     type -> type.getName()
             ).collect(Collectors.joining(", "));
             buildingResponseDTO.setRentType(rentType);
-            String district = districtCode.valueOf(item.getDistrict()).getDistrictName();
+
+            String district = "";
+            if (item.getDistrict() != null && !item.getDistrict().isEmpty()){
+                district = districtCode.valueOf(item.getDistrict()).getDistrictName();
+            }
             buildingResponseDTO.setAddress(item.getStreet() + ", " + item.getWard() + ", " + district);
             buildingResponseDTO.setFloorArea(item.getFloorArea());
             String rentArea = item.getRentAreas().stream().map(

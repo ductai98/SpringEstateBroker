@@ -3,6 +3,7 @@ package com.javaweb.entity;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="building")
@@ -51,13 +52,13 @@ public class BuildingEntity extends BaseEntity {
     @Column(name = "managerphonenumber")
     private String managerPhone;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(name = "buildingrenttype",
                 joinColumns = @JoinColumn(name = "buildingid", nullable = false),
                 inverseJoinColumns = @JoinColumn(name = "renttypeid", nullable = false))
-    private List<RentTypeEntity> rentTypes = new ArrayList<>();
+    private Set<RentTypeEntity> rentTypes;
 
-    @OneToMany(mappedBy="building", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="building", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<RentAreaEntity> rentAreas = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -195,11 +196,11 @@ public class BuildingEntity extends BaseEntity {
         this.staffs = staffs;
     }
 
-    public List<RentTypeEntity> getRentTypes() {
+    public Set<RentTypeEntity> getRentTypes() {
         return rentTypes;
     }
 
-    public void setRentTypes(List<RentTypeEntity> rentTypes) {
+    public void setRentTypes(Set<RentTypeEntity> rentTypes) {
         this.rentTypes = rentTypes;
     }
 }

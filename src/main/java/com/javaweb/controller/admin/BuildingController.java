@@ -42,9 +42,11 @@ public class BuildingController {
 
         BuildingRequestDTO buildingRequestDTO = buildingService.toBuildingRequestDTO(hashMap, typeCode);
         mav.addObject("searchModel", buildingRequestDTO);
-        List<BuildingResponseDTO> responses = new ArrayList<>();
+        List<BuildingResponseDTO> responses;
         if (typeCode != null && !typeCode.isEmpty()) {
             responses = buildingService.findAllBuilding(hashMap, typeCode);
+        } else {
+            responses = buildingService.getAll();
         }
 
         mav.addObject("buildings", responses);

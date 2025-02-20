@@ -19,13 +19,18 @@ public class BuildingAPI {
     private IBuildingService buildingService;
 
     @PostMapping
-    public BuildingAddOrUpdateRequest addOrUpdateBuilding(@RequestBody BuildingAddOrUpdateRequest request){
-        return request;
+    public Long addOrUpdateBuilding(@RequestBody BuildingAddOrUpdateRequest request){
+
+        buildingService.addOrUpdateBuilding(request);
+
+        return 0L;
     }
 
     @DeleteMapping("/{ids}")
     public void deleteBuilding(@PathVariable List<Long> ids){
         System.out.println("deleteBuilding: "+ids);
+
+        buildingService.deleteBuilding(ids);
     }
 
     @GetMapping("/{id}/staffs")

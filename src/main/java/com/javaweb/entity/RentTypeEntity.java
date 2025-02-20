@@ -2,6 +2,7 @@ package com.javaweb.entity;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="renttype")
@@ -18,7 +19,7 @@ public class RentTypeEntity {
     private String name;
 
     @ManyToMany(mappedBy = "rentTypes", fetch = FetchType.LAZY)
-    private List<BuildingEntity> buildings;
+    private Set<BuildingEntity> buildings;
 
     public Long getId() {
         return id;
@@ -44,11 +45,11 @@ public class RentTypeEntity {
         this.name = name;
     }
 
-    public List<BuildingEntity> getBuildings() {
+    public Set<BuildingEntity> getBuildings() {
         return buildings;
     }
 
-    public void setBuildings(List<BuildingEntity> buildings) {
+    public void setBuildings(Set<BuildingEntity> buildings) {
         this.buildings = buildings;
     }
 }

@@ -1,6 +1,11 @@
 package com.javaweb.converter;
 
+import com.javaweb.entity.BuildingEntity;
+import com.javaweb.model.dto.BuildingDTO;
+import com.javaweb.model.request.BuildingAddOrUpdateRequest;
 import com.javaweb.model.request.BuildingRequestDTO;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -8,6 +13,10 @@ import java.util.Map;
 
 @Component
 public class BuildingConverter {
+
+    @Autowired
+    private ModelMapper modelMapper;
+
     public BuildingRequestDTO toBuildingRequestDTO(Map<String, Object> hashMap, List<String> typeCode){
         BuildingRequestDTO buildingRequestDTO = new BuildingRequestDTO();
         if (hashMap.get("name") != null && !"".equals(hashMap.get("name"))) {
@@ -63,5 +72,9 @@ public class BuildingConverter {
         }
 
         return buildingRequestDTO;
+    }
+
+    public BuildingEntity toBuildingEntity(BuildingAddOrUpdateRequest buildingRequestDTO){
+        return modelMapper.map(buildingRequestDTO, BuildingEntity.class);
     }
 }
