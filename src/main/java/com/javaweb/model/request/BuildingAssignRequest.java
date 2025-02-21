@@ -4,14 +4,14 @@ import java.util.List;
 
 public class BuildingAssignRequest {
 
-    private String buildingId;
+    private Long buildingId;
     private List<Long> staffs;
 
-    public String getBuildingId() {
+    public Long getBuildingId() {
         return buildingId;
     }
 
-    public void setBuildingId(String buildingId) {
+    public void setBuildingId(Long buildingId) {
         this.buildingId = buildingId;
     }
 

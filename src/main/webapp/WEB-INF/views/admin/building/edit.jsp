@@ -246,8 +246,9 @@
         contentType: "application/json",
         dataType: "JSON",
         success: function (response) {
-            console.log({"success": response});
-            console.log(JSON.stringify(data));
+          if (response.data) {
+            window.location.href = response.data;
+          }
         },
         error: function (error) {
             console.log({"error" : error});

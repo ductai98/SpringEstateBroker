@@ -12,11 +12,20 @@ import java.util.Map;
 
 public interface IBuildingService {
     List<StaffResponseDTO> getStaffs(Long buildingId);
+
     List<BuildingResponseDTO> getAll();
+
     List<BuildingResponseDTO> findAllBuilding(Map<String, Object> hashMap, List<String> typeCode);
+
     BuildingRequestDTO toBuildingRequestDTO(Map<String, Object> hashMap, List<String> typeCode);
+
     void addOrUpdateBuilding(BuildingAddOrUpdateRequest request);
+
     BuildingDTO findById(Long id);
+
     void deleteBuilding(List<Long> ids);
+
     BuildingDTO toBuildingDTO(BuildingEntity entity);
+
+    BuildingDTO assignStaffs(Long buildingId, List<Long> staffIds);
 }

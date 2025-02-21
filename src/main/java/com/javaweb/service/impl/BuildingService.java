@@ -72,8 +72,8 @@ public class BuildingService implements IBuildingService {
             if (StringUtils.check(item)) {
                 rentAreaEntity.setValue(Long.parseLong(item));
                 rentAreaEntity.setBuilding(buildingEntity);
+                rentAreaEntities.add(rentAreaEntity);
             }
-            rentAreaEntities.add(rentAreaEntity);
         }
         
         return rentAreaEntities;
@@ -212,6 +212,16 @@ public class BuildingService implements IBuildingService {
 
         buildingDTO.setRentArea(rentArea);
         return buildingDTO;
+    }
+
+    @Override
+    public BuildingDTO assignStaffs(Long buildingId, List<Long> staffIds) {
+        BuildingEntity entity = buildingRepository.findById(buildingId)
+                .orElseThrow(() -> new IllegalArgumentException("Id = " + buildingId + " is not found"));
+        List<UserEntity> staffEntities = userRepository.findByIdIn(staffIds);
+        entity.setStaffs(staffEntities);
+        buildingRepository.save(entity);
+        return buildingConverter.toBuildingDTO(entity);
     }
 
     @Override

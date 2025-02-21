@@ -259,6 +259,8 @@
       </div><!-- /.page-content -->
     </div>
   </div><!-- /.main-content -->
+
+  <%--  Assign staff modal--%>
   <div class="modal fade" id="assignmentBuildingModal" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -290,6 +292,26 @@
     </div>
   </div>
 
+  <!-- Confirmation Modal -->
+  <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteConfirmModalLabel">Confirm</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete the selected building(s)?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          <button type="button" class="btn btn-danger" id="confirmDelete">Yes, Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <script>
 
       function getStaffs(buildingId) {
@@ -369,9 +391,10 @@
           }
       });
 
+      var buildingIdToDelete = [];
       function deleteBuilding(buildingId) {
-          var id = [buildingId];
-          deleteBuildings(id);
+          buildingIdToDelete = [buildingId];
+          $('#deleteConfirmModal').modal('show');
       };
 
       function deleteBuildings(data) {
@@ -390,22 +413,38 @@
               dataType: "JSON",
               success: function (response) {
                   console.log({"success": response});
+                  location.reload();
               },
               error: function (error) {
                   console.log({"error" : error});
+                  alert("An error occurred while deleting. Please try again.");
               }
           });
       }
 
       $('#btnDelete').click(function (e) {
-          e.preventDefault();
-          var ids = [];
-          $('#building-table').find('tbody input[type = checkbox]:checked').map(function () {
-              return $(this).val();
-          }).get().forEach(function (id) {
-              ids.push(id);
-          });
+        e.preventDefault();
+        var ids = $('#building-table').find('tbody input[type = checkbox]:checked').map(function () {
+          return $(this).val();
+        }).get();
+
+        if (ids.length !== 0) {
+          $('#deleteConfirmModal').modal('show');
+        }
+      });
+
+      $('#confirmDelete').click(function() {
+        if (buildingIdToDelete.length !== 0) {
+          deleteBuildings(buildingIdToDelete);
+          buildingIdToDelete = [];
+          $('#deleteConfirmModal').modal('hide');
+        } else {
+          var ids = $('#building-table').find('tbody input[type = checkbox]:checked').map(function () {
+            return $(this).val();
+          }).get();
           deleteBuildings(ids);
+          $('#deleteConfirmModal').modal('hide');
+        }
       });
   </script>
 </body>
