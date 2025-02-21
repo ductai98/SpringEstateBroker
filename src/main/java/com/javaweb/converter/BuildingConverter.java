@@ -57,12 +57,15 @@ public class BuildingConverter {
         if (hashMap.get("toPrice") != null && !"".equals(hashMap.get("toPrice"))) {
             buildingRequestDTO.setToPrice(Long.parseLong((String)hashMap.get("toPrice")));
         }
+
         if (hashMap.get("managerName") != null && !"".equals(hashMap.get("managerName"))) {
             buildingRequestDTO.setManagerName((String)hashMap.get("managerName"));
         }
-        if (hashMap.get("managerPhone") != null && !"".equals(hashMap.get("managerPhone"))) {
-            buildingRequestDTO.setManagerPhone((String)hashMap.get("managerPhone"));
+
+        if (hashMap.get("managerPhoneNumber") != null && !"".equals(hashMap.get("managerPhoneNumber"))) {
+            buildingRequestDTO.setManagerPhoneNumber((String)hashMap.get("managerPhoneNumber"));
         }
+
         if (hashMap.get("staffId") != null && !"".equals(hashMap.get("staffId"))) {
             buildingRequestDTO.setStaffId(Long.parseLong((String)hashMap.get("staffId")));
         }
@@ -76,5 +79,9 @@ public class BuildingConverter {
 
     public BuildingEntity toBuildingEntity(BuildingAddOrUpdateRequest buildingRequestDTO){
         return modelMapper.map(buildingRequestDTO, BuildingEntity.class);
+    }
+
+    public BuildingDTO toBuildingDTO(BuildingEntity entity) {
+        return modelMapper.map(entity, BuildingDTO.class);
     }
 }

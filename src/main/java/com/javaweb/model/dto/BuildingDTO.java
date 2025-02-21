@@ -16,12 +16,8 @@ public class BuildingDTO extends AbstractDTO{
     private String level;
     private List<String> typeCode;
     private String direction;
-    private String fromArea;
-    private String toArea;
     private String managerName;
-    private String managerPhone;
-    private Long fromPrice;
-    private String toPrice;
+    private String managerPhoneNumber;
     private Long staffId;
     private String rentArea;
     private String rentPrice;
@@ -157,12 +153,12 @@ public class BuildingDTO extends AbstractDTO{
         this.managerName = managerName;
     }
 
-    public String getManagerPhone() {
-        return managerPhone;
+    public String getManagerPhoneNumber() {
+        return managerPhoneNumber;
     }
 
-    public void setManagerPhone(String managerPhone) {
-        this.managerPhone = managerPhone;
+    public void setManagerPhoneNumber(String managerPhoneNumber) {
+        this.managerPhoneNumber = managerPhoneNumber;
     }
 
     public String getLevel() {
@@ -171,37 +167,5 @@ public class BuildingDTO extends AbstractDTO{
 
     public void setLevel(String level) {
         this.level = level;
-    }
-
-    public String getFromArea() {
-        return fromArea;
-    }
-
-    public void setFromArea(String fromArea) {
-        this.fromArea = fromArea;
-    }
-
-    public String getToArea() {
-        return toArea;
-    }
-
-    public void setToArea(String toArea) {
-        this.toArea = toArea;
-    }
-
-    public Long getFromPrice() {
-        return fromPrice;
-    }
-
-    public void setFromPrice(Long fromPrice) {
-        this.fromPrice = fromPrice;
-    }
-
-    public String getToPrice() {
-        return toPrice;
-    }
-
-    public void setToPrice(String toPrice) {
-        this.toPrice = toPrice;
     }
 }

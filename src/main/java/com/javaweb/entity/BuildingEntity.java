@@ -50,7 +50,7 @@ public class BuildingEntity extends BaseEntity {
     private String managerName;
 
     @Column(name = "managerphonenumber")
-    private String managerPhone;
+    private String managerPhoneNumber;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(name = "buildingrenttype",
@@ -180,12 +180,12 @@ public class BuildingEntity extends BaseEntity {
         this.managerName = managerName;
     }
 
-    public String getManagerPhone() {
-        return managerPhone;
+    public String getManagerPhoneNumber() {
+        return managerPhoneNumber;
     }
 
-    public void setManagerPhone(String managerPhone) {
-        this.managerPhone = managerPhone;
+    public void setManagerPhoneNumber(String managerPhone) {
+        this.managerPhoneNumber = managerPhone;
     }
 
     public List<UserEntity> getStaffs() {

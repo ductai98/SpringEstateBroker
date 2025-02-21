@@ -1,5 +1,7 @@
 package com.javaweb.service;
 
+import com.javaweb.entity.BuildingEntity;
+import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.request.BuildingAddOrUpdateRequest;
 import com.javaweb.model.request.BuildingRequestDTO;
 import com.javaweb.model.response.BuildingResponseDTO;
@@ -13,6 +15,8 @@ public interface IBuildingService {
     List<BuildingResponseDTO> getAll();
     List<BuildingResponseDTO> findAllBuilding(Map<String, Object> hashMap, List<String> typeCode);
     BuildingRequestDTO toBuildingRequestDTO(Map<String, Object> hashMap, List<String> typeCode);
-    Long addOrUpdateBuilding(BuildingAddOrUpdateRequest request);
+    void addOrUpdateBuilding(BuildingAddOrUpdateRequest request);
+    BuildingDTO findById(Long id);
     void deleteBuilding(List<Long> ids);
+    BuildingDTO toBuildingDTO(BuildingEntity entity);
 }

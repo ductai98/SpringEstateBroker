@@ -125,7 +125,7 @@
                         </div>
                         <div class="col-xs-5">
                           <label class="name">SĐT quản lý</label>
-                          <form:input type="number" class="form-control" path="managerPhone"/>
+                          <form:input type="number" class="form-control" path="managerPhoneNumber"/>
                         </div>
                         <div class="col-xs-2">
                           <label class="name">Nhân viên</label>
@@ -277,31 +277,7 @@
             </thead>
 
             <tbody>
-              <%--<tr class="center">
-                <td class="center">
-                  <label class="pos-rel">
-                    <input type="checkbox" class="ace" value="12" checked/>
-                    <span class="lbl"></span>
-                  </label>
-                </td>
 
-                <td>
-                  Lâm Đức Tài
-                </td>
-              </tr>
-
-              <tr class="center">
-                <td class="center">
-                  <label class="pos-rel">
-                    <input type="checkbox" class="ace" value="13" />
-                    <span class="lbl"></span>
-                  </label>
-                </td>
-
-                <td>
-                  Phạm Hoàng Hưng
-                </td>
-              </tr>--%>
             </tbody>
           </table>
           <input type="hidden" id="buildingId" name="buildingId" value="1"/>
@@ -381,7 +357,16 @@
 
       $('#btnSearch').click(function (e) {
           e.preventDefault();
-          $('#search-form').submit();
+          var typeCode = $('input[name="typeCode"]:checked').map(function() {
+              return $(this).val();
+          }).get();
+
+          if (typeCode.length !== 0) {
+              $('#search-form').submit();
+          } else {
+              var currentUrl = window.location.href;
+              window.location.href = currentUrl + '?typeCode=required';
+          }
       });
 
       function deleteBuilding(buildingId) {

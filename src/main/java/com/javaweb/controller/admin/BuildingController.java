@@ -2,14 +2,18 @@ package com.javaweb.controller.admin;
 
 
 import com.javaweb.converter.BuildingConverter;
+import com.javaweb.entity.BuildingEntity;
 import com.javaweb.enums.buildingType;
 import com.javaweb.enums.districtCode;
 import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.request.BuildingAddOrUpdateRequest;
 import com.javaweb.model.request.BuildingRequestDTO;
 import com.javaweb.model.response.BuildingResponseDTO;
+import com.javaweb.repository.BuildingRepository;
 import com.javaweb.service.IBuildingService;
 import com.javaweb.service.IUserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,11 +30,14 @@ import java.util.Map;
 @Controller(value="adminBuildingController")
 public class BuildingController {
 
+    private static final Logger log = LogManager.getLogger(BuildingController.class);
     @Autowired
     private IUserService userService;
 
     @Autowired
     private IBuildingService buildingService;
+    @Autowired
+    private BuildingRepository buildingRepository;
 
 
     @GetMapping(value = "/admin/building-search")
@@ -68,8 +75,18 @@ public class BuildingController {
     public ModelAndView adminBuildingEdit(@PathVariable("id") Long id, HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("admin/building/edit");
 
-        BuildingDTO buildingDTO = new BuildingDTO();
-        buildingDTO.setId(id);
+        if (id == null) {
+            throw new IllegalArgumentException("Id can not be null");
+        }
+
+        BuildingDTO buildingDTO;
+        try {
+            buildingDTO = buildingService.findById(id);
+        } catch (IllegalArgumentException exception) {
+            log.error("e: ", exception);
+            return null;
+        }
+
         mav.addObject("buildingInfo", buildingDTO);
         mav.addObject("districts", districtCode.type());
         mav.addObject("typeCodes", buildingType.type());

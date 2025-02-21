@@ -18,7 +18,7 @@ public class BuildingRequestDTO extends AbstractDTO {
     private Long fromPrice;
     private Long toPrice;
     private String managerName;
-    private String managerPhone;
+    private String managerPhoneNumber;
     private Long staffId;
     private List<String> typeCode;
 
@@ -87,12 +87,12 @@ public class BuildingRequestDTO extends AbstractDTO {
         this.managerName = managerName;
     }
 
-    public String getManagerPhone() {
-        return managerPhone;
+    public String getManagerPhoneNumber() {
+        return managerPhoneNumber;
     }
 
-    public void setManagerPhone(String managerPhone) {
-        this.managerPhone = managerPhone;
+    public void setManagerPhoneNumber(String managerPhoneNumber) {
+        this.managerPhoneNumber = managerPhoneNumber;
     }
 
     public Long getFromPrice() {

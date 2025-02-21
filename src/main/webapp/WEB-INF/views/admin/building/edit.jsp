@@ -168,7 +168,7 @@
                     <label class="name">SĐT quản lý</label>
                   </div>
                   <div class="col-xs-9">
-                    <form:input type="text" class="form-control" path="managerPhone"/>
+                    <form:input type="text" class="form-control" path="managerPhoneNumber"/>
                   </div>
                 </div>
 

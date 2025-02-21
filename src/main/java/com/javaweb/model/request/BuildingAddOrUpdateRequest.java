@@ -18,7 +18,7 @@ public class BuildingAddOrUpdateRequest extends AbstractDTO {
     private String rentPrice;
     private Double brokerageFee;
     private String managerName;
-    private String managerPhone;
+    private String managerPhoneNumber;
     private List<String> typeCode;
 
     public String getName() {
@@ -125,12 +125,12 @@ public class BuildingAddOrUpdateRequest extends AbstractDTO {
         this.managerName = managerName;
     }
 
-    public String getManagerPhone() {
-        return managerPhone;
+    public String getManagerPhoneNumber() {
+        return managerPhoneNumber;
     }
 
-    public void setManagerPhone(String managerPhone) {
-        this.managerPhone = managerPhone;
+    public void setManagerPhoneNumber(String managerPhoneNumber) {
+        this.managerPhoneNumber = managerPhoneNumber;
     }
 
     public List<String> getTypeCode() {

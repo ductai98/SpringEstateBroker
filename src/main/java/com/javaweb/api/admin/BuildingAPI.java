@@ -7,6 +7,9 @@ import com.javaweb.model.response.ResponseDTO;
 import com.javaweb.model.response.StaffResponseDTO;
 import com.javaweb.service.IBuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,11 +22,11 @@ public class BuildingAPI {
     private IBuildingService buildingService;
 
     @PostMapping
-    public Long addOrUpdateBuilding(@RequestBody BuildingAddOrUpdateRequest request){
-
+    public ResponseEntity<String> addOrUpdateBuilding(@RequestBody BuildingAddOrUpdateRequest request) {
         buildingService.addOrUpdateBuilding(request);
-
-        return 0L;
+        return ResponseEntity.status(HttpStatus.OK)
+                .header(HttpHeaders.LOCATION, "/admin/building-search")
+                .body("Redirect to home page");
     }
 
     @DeleteMapping("/{ids}")

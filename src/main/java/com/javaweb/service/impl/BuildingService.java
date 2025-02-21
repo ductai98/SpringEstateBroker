@@ -12,11 +12,11 @@ import com.javaweb.model.request.BuildingRequestDTO;
 import com.javaweb.model.response.BuildingResponseDTO;
 import com.javaweb.model.response.StaffResponseDTO;
 import com.javaweb.repository.BuildingRepository;
+import com.javaweb.repository.RentAreaRepository;
 import com.javaweb.repository.RentTypeRepository;
 import com.javaweb.repository.UserRepository;
 import com.javaweb.service.IBuildingService;
 import com.javaweb.utils.StringUtils;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,15 +35,22 @@ public class BuildingService implements IBuildingService {
     private UserRepository userRepository;
 
     @Autowired
-    BuildingConverter buildingConverter;
+    private BuildingConverter buildingConverter;
 
     @Autowired
     private RentTypeRepository rentTypeRepository;
 
+    @Autowired
+    private RentAreaRepository rentAreaRepository;
+
     @Override
-    public Long addOrUpdateBuilding(BuildingAddOrUpdateRequest request) {
+    public void addOrUpdateBuilding(BuildingAddOrUpdateRequest request) {
 
         BuildingEntity entity = buildingConverter.toBuildingEntity(request);
+
+        if (entity.getId() != null) {
+            rentAreaRepository.deleteAllByBuilding(entity);
+        }
 
         List<RentAreaEntity> rentAreaEntities = parseRentArea(request.getRentArea(), entity);
         
@@ -55,7 +62,6 @@ public class BuildingService implements IBuildingService {
 
         buildingRepository.save(entity);
 
-        return 0L;
     }
 
     List<RentAreaEntity> parseRentArea(String rentArea, BuildingEntity buildingEntity){
@@ -147,7 +153,7 @@ public class BuildingService implements IBuildingService {
             buildingResponseDTO.setEmptyArea(item.getEmptyArea());
             buildingResponseDTO.setRentPrice(item.getRentPrice());
             buildingResponseDTO.setManagerName(item.getManagerName());
-            buildingResponseDTO.setManagerPhoneNumber(item.getManagerPhone());
+            buildingResponseDTO.setManagerPhoneNumber(item.getManagerPhoneNumber());
             buildingResponseDTO.setBrokerageFee(item.getBrokerageFee());
             buildingResponseDTO.setNumberOfBasement(item.getNumberOfBasement());
             result.add(buildingResponseDTO);
@@ -181,7 +187,7 @@ public class BuildingService implements IBuildingService {
             buildingResponseDTO.setEmptyArea(item.getEmptyArea());
             buildingResponseDTO.setRentPrice(item.getRentPrice());
             buildingResponseDTO.setManagerName(item.getManagerName());
-            buildingResponseDTO.setManagerPhoneNumber(item.getManagerPhone());
+            buildingResponseDTO.setManagerPhoneNumber(item.getManagerPhoneNumber());
             buildingResponseDTO.setBrokerageFee(item.getBrokerageFee());
             buildingResponseDTO.setNumberOfBasement(item.getNumberOfBasement());
             result.add(buildingResponseDTO);
@@ -190,7 +196,31 @@ public class BuildingService implements IBuildingService {
     }
 
     @Override
+    public BuildingDTO findById(Long id) {
+        BuildingEntity entity = buildingRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Id = " + id + " is not found"));
+
+        List<String> typeCodes = entity.getRentTypes().stream()
+                .map(RentTypeEntity::getCode).collect(Collectors.toList());
+
+        BuildingDTO buildingDTO = buildingConverter.toBuildingDTO(entity);
+        buildingDTO.setTypeCode(typeCodes);
+
+        String rentArea = rentAreaRepository.findAllByBuilding(entity).stream()
+                .map(RentAreaEntity::getValue).map(String::valueOf)
+                .collect(Collectors.joining(","));
+
+        buildingDTO.setRentArea(rentArea);
+        return buildingDTO;
+    }
+
+    @Override
     public BuildingRequestDTO toBuildingRequestDTO(Map<String, Object> hashMap, List<String> typeCode) {
         return buildingConverter.toBuildingRequestDTO(hashMap,typeCode);
+    }
+
+    @Override
+    public BuildingDTO toBuildingDTO(BuildingEntity entity) {
+        return buildingConverter.toBuildingDTO(entity);
     }
 }
