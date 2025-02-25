@@ -3,6 +3,7 @@ package com.javaweb.entity;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -37,6 +38,17 @@ public class UserEntity extends BaseEntity {
 
     @ManyToMany(mappedBy = "staffs", fetch = FetchType.LAZY)
     private List<BuildingEntity> buildings = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "staffs", fetch = FetchType.LAZY)
+    private List<CustomerEntity> customers;
+
+    public List<CustomerEntity> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<CustomerEntity> customers) {
+        this.customers = customers;
+    }
 
     public List<BuildingEntity> getBuildings() {
         return buildings;
