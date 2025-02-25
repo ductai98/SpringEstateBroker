@@ -20,7 +20,7 @@ public class CustomerEntity extends BaseEntity {
     @Column(name="demand")
     private String demand;
 
-    @Column(name="status")
+    @Column(name="status", columnDefinition = "bigint default 1")
     private Long status;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})

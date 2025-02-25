@@ -75,7 +75,7 @@
                     <label class="name">Nhu cầu</label>
                   </div>
                   <div class="col-xs-9">
-                    <form:input type="number" class="form-control" path="demand"/>
+                    <form:input type="text" class="form-control" path="demand"/>
                   </div>
                 </div>
 

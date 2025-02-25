@@ -104,7 +104,7 @@
 
           <security:authorize access="hasAnyRole('ADMIN', 'STAFF')">
             <div class="pull-right" style="margin: -3px 0 0 0;">
-              <a href="/admin/building-edit">
+              <a href="/admin/customer-edit">
                 <button class="btn btn-sm btn-info" title="Thêm khách hàng">
                   <i class="ace-icon fa fa-plus bigger-120"></i>
                 </button>
@@ -121,7 +121,7 @@
       <!-- Bảng kết quả tìm kiếm -->
       <div class="row">
         <div class="col-xs-12">
-          <table id="building-table" class="table table-striped table-bordered table-hover"
+          <table id="customer-table" class="table table-striped table-bordered table-hover"
                  style="margin: 3em 0 1.5em;">
             <thead>
             <tr>
@@ -175,18 +175,18 @@
                       <button
                           class="btn btn-xs btn-success"
                           title="Giao toa nha"
-                          onclick="assignmentBuilding(${building.id})">
+                          onclick="assignmentcustomer(${customer.id})">
                         <i class="ace-icon glyphicon glyphicon-list bigger-120"></i>
                       </button>
                     </security:authorize>
                     <security:authorize access="hasRole('STAFF')">
-                      <a class="btn btn-xs btn-info" title="Sua thong tin" href="/admin/building-edit-${building.id}">
+                      <a class="btn btn-xs btn-info" title="Sua thong tin" href="/admin/customer-edit-${customer.id}">
                         <i class="ace-icon fa fa-pencil bigger-120"></i>
                       </a>
                     </security:authorize>
                     <security:authorize access="hasRole('ADMIN')">
                     <button class="btn btn-xs btn-danger" title="Xoa toa nha"
-                            onclick="deleteBuilding(${building.id})">
+                            onclick="deletecustomer(${customer.id})">
                       <i class="ace-icon fa fa-trash-o bigger-120"></i>
                     </button>
                   </div>
@@ -205,7 +205,7 @@
 </div><!-- /.main-content -->
 
 <%--  Assign staff modal--%>
-<div class="modal fade" id="assignmentBuildingModal" role="dialog">
+<div class="modal fade" id="assignmentcustomerModal" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -226,7 +226,7 @@
 
           </tbody>
         </table>
-        <input type="hidden" id="buildingId" name="buildingId" value="1"/>
+        <input type="hidden" id="customerId" name="customerId" value="1"/>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -248,7 +248,7 @@
         </button>
       </div>
       <div class="modal-body">
-        Are you sure you want to delete the selected building(s)?
+        Are you sure you want to delete the selected customer(s)?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
@@ -259,10 +259,10 @@
 </div>
 <script>
 
-  function getStaffs(buildingId) {
+  function getStaffs(customerId) {
     $.ajax({
       type: "GET",
-      url: "/api/building/" + buildingId + "/staffs",
+      url: "/api/customer/" + customerId + "/staffs",
       contentType: "application/json",
       dataType: "JSON",
       success: function (response) {
@@ -292,23 +292,23 @@
     });
   }
 
-  function assignmentBuilding(buildingId) {
-    $('#assignmentBuildingModal').modal();
-    getStaffs(buildingId);
-    $('#buildingId').val(buildingId);
+  function assignmentcustomer(customerId) {
+    $('#assignmentcustomerModal').modal();
+    getStaffs(customerId);
+    $('#customerId').val(customerId);
   }
 
   $('#btnAssign').click(function (e) {
     e.preventDefault();
     var data = {};
-    data['buildingId'] = $('#buildingId').val();
+    data['customerId'] = $('#customerId').val();
     var staffs = $('#staff-list').find('tbody input[type = checkbox]:checked').map(function () {
       return $(this).val();
     }).get();
     data['staffs'] = staffs;
 
     $.ajax({
-      url: "/api/building/assign",
+      url: "/api/customer/assign",
       type: "POST",
       contentType: "application/json",
       dataType: "JSON",
@@ -336,24 +336,24 @@
     }
   });
 
-  var buildingIdToDelete = [];
+  var customerIdToDelete = [];
 
-  function deleteBuilding(buildingId) {
-    buildingIdToDelete = [buildingId];
+  function deletecustomer(customerId) {
+    customerIdToDelete = [customerId];
     $('#deleteConfirmModal').modal('show');
   };
 
-  function deleteBuildings(data) {
+  function deletecustomers(data) {
 
     console.log(data);
 
     if (data.length === 0) {
-      console.log("no building select");
+      console.log("no customer select");
       return;
     }
 
     $.ajax({
-      url: "/api/building/" + data,
+      url: "/api/customer/" + data,
       type: "DELETE",
       contentType: "application/json",
       dataType: "JSON",
@@ -370,7 +370,7 @@
 
   $('#btnDelete').click(function (e) {
     e.preventDefault();
-    var ids = $('#building-table').find('tbody input[type = checkbox]:checked').map(function () {
+    var ids = $('#customer-table').find('tbody input[type = checkbox]:checked').map(function () {
       return $(this).val();
     }).get();
 
@@ -380,15 +380,15 @@
   });
 
   $('#confirmDelete').click(function () {
-    if (buildingIdToDelete.length !== 0) {
-      deleteBuildings(buildingIdToDelete);
-      buildingIdToDelete = [];
+    if (customerIdToDelete.length !== 0) {
+      deletecustomers(customerIdToDelete);
+      customerIdToDelete = [];
       $('#deleteConfirmModal').modal('hide');
     } else {
-      var ids = $('#building-table').find('tbody input[type = checkbox]:checked').map(function () {
+      var ids = $('#customer-table').find('tbody input[type = checkbox]:checked').map(function () {
         return $(this).val();
       }).get();
-      deleteBuildings(ids);
+      deletecustomers(ids);
       $('#deleteConfirmModal').modal('hide');
     }
   });
