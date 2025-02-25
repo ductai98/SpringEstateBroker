@@ -15,21 +15,24 @@ import com.javaweb.repository.BuildingRepository;
 import com.javaweb.repository.RentAreaRepository;
 import com.javaweb.repository.RentTypeRepository;
 import com.javaweb.repository.UserRepository;
-import com.javaweb.service.IBuildingService;
+import com.javaweb.service.BuildingService;
 import com.javaweb.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class BuildingService implements IBuildingService {
+public class BuildingServiceImpl implements BuildingService {
 
     @Autowired
     private BuildingRepository buildingRepository;
+
+    private EntityManager manager;
 
     @Autowired
     private UserRepository userRepository;
@@ -129,9 +132,20 @@ public class BuildingService implements IBuildingService {
     }
 
     @Override
-    public List<BuildingResponseDTO> getAll() {
+    public List<BuildingResponseDTO> getAll(Long staffId) {
         List<BuildingResponseDTO> result = new ArrayList<>();
-        List<BuildingEntity> buildingEntities = buildingRepository.findAll().stream().distinct().collect(Collectors.toList());;
+        List<BuildingEntity> buildingEntities;
+        if (staffId != null) {
+            UserEntity staff = userRepository.findById(staffId)
+                    .orElseThrow(() -> new IllegalArgumentException("staff not found, staffId = " + staffId + " ! "));
+            List<UserEntity> staffs = new ArrayList<>();
+            staffs.add(staff);
+            buildingEntities = buildingRepository.findAllByStaffs(staffs);
+        } else {
+            buildingEntities = buildingRepository.findAll().stream().distinct().collect(Collectors.toList());
+
+        }
+
         buildingEntities.forEach(item -> {
             BuildingResponseDTO buildingResponseDTO = new BuildingResponseDTO();
             buildingResponseDTO.setId(item.getId());
