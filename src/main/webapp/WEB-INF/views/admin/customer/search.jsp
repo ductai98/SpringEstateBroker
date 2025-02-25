@@ -65,12 +65,12 @@
                           </div>
                           <div class="col-xs-4">
                             <label class="name">Số điện thoại</label>
-                            <form:input type="number" class="form-control" path="phone"/>
+                            <form:input type="text" class="form-control" path="phone"/>
                           </div>
 
                           <div class="col-xs-4">
                             <label class="name">Email</label>
-                            <form:input type="number" class="form-control" path="email"/>
+                            <form:input type="text" class="form-control" path="email"/>
                           </div>
                         </div>
 
@@ -137,7 +137,6 @@
               <th>Nhu cầu</th>
               <th>Người thêm</th>
               <th>Ngày thêm</th>
-              <th>Tình trạng</th>
               <th>Thao tác</th>
             </tr>
             </thead>
@@ -165,8 +164,6 @@
                 <td>${customer.createdBy}</td>
 
                 <td>${customer.createdDate}</td>
-
-                <td>${customer.status}</td>
 
                 <td>
 
@@ -324,16 +321,7 @@
 
   $('#btnSearch').click(function (e) {
     e.preventDefault();
-    var typeCode = $('input[name="typeCode"]:checked').map(function () {
-      return $(this).val();
-    }).get();
-
-    if (typeCode.length !== 0) {
-      $('#search-form').submit();
-    } else {
-      var currentUrl = window.location.href;
-      window.location.href = currentUrl + '?typeCode=required';
-    }
+    $('#search-form').submit();
   });
 
   var customerIdToDelete = [];

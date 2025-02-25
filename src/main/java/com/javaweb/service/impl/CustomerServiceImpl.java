@@ -55,6 +55,17 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public List<CustomerDTO> getAllCustomer(CustomerDTO customer) {
+        List<CustomerEntity> entities = customerRepository.findAll(customer);
+        List<CustomerDTO> result = new ArrayList<>();
+        for (CustomerEntity entity : entities) {
+            CustomerDTO dto = customerConverter.toCustomerDTO(entity);
+            result.add(dto);
+        }
+        return result;
+    }
+
+    @Override
     public void addOrUpdateCustomer(CustomerDTO customer) {
         CustomerEntity entity = customerConverter.toCustomerEntity(customer);
 

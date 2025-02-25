@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface CustomerService {
     List<CustomerDTO> getAll(Long staffId);
+    List<CustomerDTO> getAllCustomer(CustomerDTO customer);
     void addOrUpdateCustomer(CustomerDTO customer);
 }

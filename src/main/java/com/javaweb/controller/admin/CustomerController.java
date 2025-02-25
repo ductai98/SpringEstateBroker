@@ -21,15 +21,12 @@ public class CustomerController {
     @GetMapping(value = "/admin/customer-search")
     public ModelAndView customerSearchPage(@ModelAttribute("searchModel") CustomerDTO dto) {
         ModelAndView mav = new ModelAndView("admin/customer/search");
-
+        List<CustomerDTO> customers;
         if (SecurityUtils.getAuthorities().contains("STAFF")) {
             dto.setStaffId(SecurityUtils.getPrincipal().getId());
-        }
-        List<CustomerDTO> customers;
-        if (dto.getStaffId() != null) {
             customers = customerService.getAll(dto.getStaffId());
         } else {
-            customers = customerService.getAll(null);
+            customers = customerService.getAllCustomer(dto);
         }
 
         mav.addObject("customers", customers);
