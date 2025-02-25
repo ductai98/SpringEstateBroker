@@ -10,10 +10,10 @@ import com.javaweb.model.response.StaffResponseDTO;
 import java.util.List;
 import java.util.Map;
 
-public interface IBuildingService {
+public interface BuildingService {
     List<StaffResponseDTO> getStaffs(Long buildingId);
 
-    List<BuildingResponseDTO> getAll();
+    List<BuildingResponseDTO> getAll(Long staffId);
 
     List<BuildingResponseDTO> findAllBuilding(Map<String, Object> hashMap, List<String> typeCode);
 

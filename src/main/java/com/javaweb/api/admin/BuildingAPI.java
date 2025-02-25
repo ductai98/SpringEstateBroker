@@ -6,13 +6,10 @@ import com.javaweb.model.request.BuildingAddOrUpdateRequest;
 import com.javaweb.model.request.BuildingAssignRequest;
 import com.javaweb.model.response.ResponseDTO;
 import com.javaweb.model.response.StaffResponseDTO;
-import com.javaweb.service.IBuildingService;
+import com.javaweb.service.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -21,7 +18,7 @@ import java.util.List;
 public class BuildingAPI {
 
     @Autowired
-    private IBuildingService buildingService;
+    private BuildingService buildingService;
 
     @PostMapping
     public ResponseEntity<ResponseDTO> addOrUpdateBuilding(@RequestBody BuildingAddOrUpdateRequest request) {

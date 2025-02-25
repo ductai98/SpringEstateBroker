@@ -1,8 +1,6 @@
 package com.javaweb.controller.admin;
 
 
-import com.javaweb.converter.BuildingConverter;
-import com.javaweb.entity.BuildingEntity;
 import com.javaweb.enums.buildingType;
 import com.javaweb.enums.districtCode;
 import com.javaweb.model.dto.BuildingDTO;
@@ -10,8 +8,9 @@ import com.javaweb.model.request.BuildingAddOrUpdateRequest;
 import com.javaweb.model.request.BuildingRequestDTO;
 import com.javaweb.model.response.BuildingResponseDTO;
 import com.javaweb.repository.BuildingRepository;
-import com.javaweb.service.IBuildingService;
-import com.javaweb.service.IUserService;
+import com.javaweb.security.utils.SecurityUtils;
+import com.javaweb.service.BuildingService;
+import com.javaweb.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,10 +30,10 @@ public class BuildingController {
 
     private static final Logger log = LogManager.getLogger(BuildingController.class);
     @Autowired
-    private IUserService userService;
+    private UserService userService;
 
     @Autowired
-    private IBuildingService buildingService;
+    private BuildingService buildingService;
     @Autowired
     private BuildingRepository buildingRepository;
 
@@ -50,11 +48,22 @@ public class BuildingController {
         BuildingRequestDTO buildingRequestDTO = buildingService.toBuildingRequestDTO(hashMap, typeCode);
         mav.addObject("searchModel", buildingRequestDTO);
         List<BuildingResponseDTO> responses;
-        if (typeCode != null && !typeCode.isEmpty()) {
-            responses = buildingService.findAllBuilding(hashMap, typeCode);
+        if (SecurityUtils.getAuthorities().contains("ROLE_STAFF")) {
+            Long staffId = SecurityUtils.getPrincipal().getId();
+            hashMap.put("staffId", staffId);
+            if (typeCode != null && !typeCode.isEmpty()) {
+                responses = buildingService.findAllBuilding(hashMap, typeCode);
+            } else {
+                responses = buildingService.getAll(staffId);
+            }
         } else {
-            responses = buildingService.getAll();
+            if (typeCode != null && !typeCode.isEmpty()) {
+                responses = buildingService.findAllBuilding(hashMap, typeCode);
+            } else {
+                responses = buildingService.getAll(null);
+            }
         }
+
 
         mav.addObject("buildings", responses);
         mav.addObject("staffs", userService.getStaffs());
