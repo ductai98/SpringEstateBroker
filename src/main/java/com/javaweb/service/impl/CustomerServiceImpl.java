@@ -1,13 +1,20 @@
 package com.javaweb.service.impl;
 
 import com.javaweb.converter.CustomerConverter;
+import com.javaweb.converter.TransactionConverter;
 import com.javaweb.entity.CustomerEntity;
+import com.javaweb.entity.TransactionEntity;
+import com.javaweb.entity.TransactionTypeEntity;
 import com.javaweb.entity.UserEntity;
 import com.javaweb.model.dto.CustomerDTO;
+import com.javaweb.model.dto.TransactionDTO;
 import com.javaweb.model.response.StaffResponseDTO;
 import com.javaweb.repository.CustomerRepository;
+import com.javaweb.repository.TransactionTypeRepository;
 import com.javaweb.repository.UserRepository;
+import com.javaweb.security.utils.SecurityUtils;
 import com.javaweb.service.CustomerService;
+import com.javaweb.service.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +35,15 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private CustomerConverter customerConverter;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
+
+    @Autowired
+    private TransactionTypeRepository transactionTypeRepository;
+
+    @Autowired
+    private TransactionConverter transactionConverter;
 
     @Override
     public List<CustomerDTO> getAll(Long staffId) {
@@ -118,5 +134,28 @@ public class CustomerServiceImpl implements CustomerService {
         customerEntity.setStaffs(staffs);
         customerRepository.save(customerEntity);
         return customerConverter.toCustomerDTO(customerEntity);
+    }
+
+    @Override
+    public TransactionDTO addTransaction(TransactionDTO transaction) {
+        Long userId = SecurityUtils.getPrincipal().getId();
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        CustomerEntity customer = customerRepository.findById(transaction.getCustomerId())
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+
+        TransactionTypeEntity type = transactionTypeRepository.findById(transaction.getTypeId())
+                .orElseThrow(() -> new IllegalArgumentException("Transaction type not found"));
+
+        TransactionEntity transactionEntity = new TransactionEntity();
+        transactionEntity.setCustomer(customer);
+        transactionEntity.setStaff(user);
+        transactionEntity.setTransactionType(type);
+        transactionEntity.setNote(transaction.getNote());
+        transactionRepository.save(transactionEntity);
+        TransactionDTO dto = transactionConverter.toTransactionDTO(transactionEntity);
+        dto.setStaffId(transactionEntity.getStaff().getId());
+        return dto;
     }
 }

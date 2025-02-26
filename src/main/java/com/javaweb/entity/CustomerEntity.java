@@ -28,6 +28,10 @@ public class CustomerEntity extends BaseEntity {
                 inverseJoinColumns = @JoinColumn(name = "staffid", nullable = false))
     private List<UserEntity> staffs;
 
+
+    @OneToMany(mappedBy="customer", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private List<TransactionEntity> transactions;
+
     public List<UserEntity> getStaffs() {
         return staffs;
     }

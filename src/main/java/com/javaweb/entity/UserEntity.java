@@ -42,6 +42,9 @@ public class UserEntity extends BaseEntity {
     @ManyToMany(mappedBy = "staffs", fetch = FetchType.LAZY)
     private List<CustomerEntity> customers;
 
+    @OneToMany(mappedBy = "staff", fetch = FetchType.LAZY)
+    private List<TransactionEntity> transactions;
+
     public List<CustomerEntity> getCustomers() {
         return customers;
     }

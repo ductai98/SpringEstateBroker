@@ -1,6 +1,7 @@
 package com.javaweb.api.admin;
 
 import com.javaweb.model.dto.CustomerDTO;
+import com.javaweb.model.dto.TransactionDTO;
 import com.javaweb.model.request.AssignRequest;
 import com.javaweb.model.response.ResponseDTO;
 import com.javaweb.model.response.StaffResponseDTO;
@@ -54,6 +55,14 @@ public class CustomerAPI {
         CustomerDTO buildingDTO = customerService.assignStaffs(request.getId(), request.getStaffIds());
         ResponseDTO responseDTO = new ResponseDTO();
         responseDTO.setData(buildingDTO);
+        return responseDTO;
+    }
+
+    @PostMapping("/transaction")
+    public ResponseDTO addTransaction(@RequestBody TransactionDTO transaction){
+        TransactionDTO transactionDTO = customerService.addTransaction(transaction);
+        ResponseDTO responseDTO = new ResponseDTO();
+        responseDTO.setData(transactionDTO);
         return responseDTO;
     }
 }
