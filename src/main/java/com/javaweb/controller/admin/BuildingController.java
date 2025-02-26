@@ -7,7 +7,6 @@ import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.request.BuildingAddOrUpdateRequest;
 import com.javaweb.model.request.BuildingRequestDTO;
 import com.javaweb.model.response.BuildingResponseDTO;
-import com.javaweb.repository.BuildingRepository;
 import com.javaweb.security.utils.SecurityUtils;
 import com.javaweb.service.BuildingService;
 import com.javaweb.service.UserService;
@@ -34,8 +33,6 @@ public class BuildingController {
 
     @Autowired
     private BuildingService buildingService;
-    @Autowired
-    private BuildingRepository buildingRepository;
 
 
     @GetMapping(value = "/admin/building-search")

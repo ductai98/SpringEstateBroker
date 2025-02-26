@@ -176,7 +176,7 @@
                         <i class="ace-icon glyphicon glyphicon-list bigger-120"></i>
                       </button>
                     </security:authorize>
-                    <security:authorize access="hasRole('STAFF')">
+                    <security:authorize access="hasAnyRole('STAFF', 'ADMIN')">
                       <a class="btn btn-xs btn-info" title="Sua thong tin" href="/admin/customer-edit-${customer.id}">
                         <i class="ace-icon fa fa-pencil bigger-120"></i>
                       </a>

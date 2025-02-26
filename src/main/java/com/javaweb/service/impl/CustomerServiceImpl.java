@@ -37,7 +37,7 @@ public class CustomerServiceImpl implements CustomerService {
 
             List<UserEntity> staffs = new ArrayList<>();
             staffs.add(staff);
-            entities = customerRepository.findAllByStaffs(staffs).stream()
+            entities = customerRepository.findAllByStaffsAndStatus(staffs, 1L).stream()
                     .distinct().collect(Collectors.toList());
         } else {
             entities = customerRepository.findAll().stream()
@@ -70,5 +70,19 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerEntity entity = customerConverter.toCustomerEntity(customer);
 
         customerRepository.save(entity);
+    }
+
+    @Override
+    public CustomerDTO findById(Long id) {
+        CustomerEntity entity = customerRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found, id = " + id + " ! "));
+        return customerConverter.toCustomerDTO(entity);
+    }
+
+    @Override
+    public void deleteByIds(List<Long> ids) {
+        List<CustomerEntity> entities = customerRepository.findByIdIn(ids);
+        entities.forEach(entity -> entity.setStatus(0L));
+        customerRepository.saveAll(entities);
     }
 }

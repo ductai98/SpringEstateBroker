@@ -127,11 +127,11 @@
           window.location.href = "/admin/customer-edit-" + data.id + "?phone=required";
         }
       } else {
-        addOrUpdateBuilding(data);
+        addOrUpdateCustomer(data);
       }
     });
 
-    function addOrUpdateBuilding(data) {
+    function addOrUpdateCustomer(data) {
       $.ajax({
         type: "POST",
         url: "${customer}",

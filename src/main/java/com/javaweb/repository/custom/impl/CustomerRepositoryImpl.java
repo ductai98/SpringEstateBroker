@@ -1,10 +1,8 @@
 package com.javaweb.repository.custom.impl;
 
-import com.javaweb.entity.BuildingEntity;
 import com.javaweb.entity.CustomerEntity;
 import com.javaweb.model.dto.CustomerDTO;
 import com.javaweb.repository.custom.CustomerRepositoryCustom;
-import com.javaweb.utils.NumericUtils;
 import com.javaweb.utils.StringUtils;
 import org.springframework.stereotype.Repository;
 
@@ -68,7 +66,7 @@ public class CustomerRepositoryImpl implements CustomerRepositoryCustom {
         StringBuilder where = new StringBuilder(" WHERE 1=1  ");
         normalQuery(customer, where);
         specialQuery(customer, where);
-        //where.append(" GROUP BY b.id;");
+        where.append(" AND c.status = 1;");
         sql.append(where);
 
         Query query = entityManager.createNativeQuery(sql.toString(), CustomerEntity.class);

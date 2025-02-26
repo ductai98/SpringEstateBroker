@@ -8,4 +8,6 @@ public interface CustomerService {
     List<CustomerDTO> getAll(Long staffId);
     List<CustomerDTO> getAllCustomer(CustomerDTO customer);
     void addOrUpdateCustomer(CustomerDTO customer);
+    CustomerDTO findById(Long id);
+    void deleteByIds(List<Long> id);
 }

@@ -2,7 +2,6 @@ package com.javaweb.entity;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name="customer")
@@ -20,8 +19,8 @@ public class CustomerEntity extends BaseEntity {
     @Column(name="demand")
     private String demand;
 
-    @Column(name="status", columnDefinition = "bigint default 1")
-    private Long status;
+    @Column(name="status", columnDefinition = "int(11) default '1'")
+    private Long status = 1L;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "assignmentcustomer",
