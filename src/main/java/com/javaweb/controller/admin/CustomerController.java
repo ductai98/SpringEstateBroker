@@ -1,10 +1,13 @@
 package com.javaweb.controller.admin;
 
-import com.javaweb.enums.buildingType;
 import com.javaweb.enums.districtCode;
 import com.javaweb.model.dto.CustomerDTO;
+import com.javaweb.model.dto.TransactionDTO;
+import com.javaweb.model.dto.TransactionTypeDTO;
+import com.javaweb.repository.TransactionService;
 import com.javaweb.security.utils.SecurityUtils;
 import com.javaweb.service.CustomerService;
+import com.javaweb.service.TransactionTypeService;
 import com.javaweb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +28,12 @@ public class CustomerController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private TransactionService transactionService;
+
+    @Autowired
+    private TransactionTypeService transactionTypeService;
+
     @GetMapping(value = "/admin/customer-search")
     public ModelAndView customerSearchPage(@ModelAttribute("searchModel") CustomerDTO dto) {
         ModelAndView mav = new ModelAndView("admin/customer/search");
@@ -44,6 +53,9 @@ public class CustomerController {
     @GetMapping(value = "/admin/customer-edit")
     public ModelAndView adminBuildingEdit(@ModelAttribute("customerInfo") CustomerDTO request, HttpServletRequest httpServletRequest) {
         ModelAndView mav = new ModelAndView("admin/customer/edit");
+
+
+        mav.addObject("transactions", districtCode.type());
         return mav;
     }
 
@@ -63,7 +75,15 @@ public class CustomerController {
             return null;
         }
 
+        List<TransactionTypeDTO> transactionTypes = transactionTypeService.getAll();
+
+        List<TransactionDTO> careTransactions = transactionService.findByTypeAndCustomerId("CARE", customerDTO.getId());
+        List<TransactionDTO> viewTransactions = transactionService.findByTypeAndCustomerId("VIEW", customerDTO.getId());;
+
         mav.addObject("customerInfo", customerDTO);
+        mav.addObject("transactionTypes", transactionTypes);
+        mav.addObject("careTransactions", careTransactions);
+        mav.addObject("viewTransactions", viewTransactions);
         return mav;
     }
 }
