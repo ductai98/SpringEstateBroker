@@ -374,11 +374,11 @@
   $('#btnAssign').click(function (e) {
     e.preventDefault();
     var data = {};
-    data['buildingId'] = $('#buildingId').val();
+    data['id'] = $('#buildingId').val();
     var staffs = $('#staff-list').find('tbody input[type = checkbox]:checked').map(function () {
       return $(this).val();
     }).get();
-    data['staffs'] = staffs;
+    data['staffIds'] = staffs;
 
     $.ajax({
       url: "/api/building/assign",

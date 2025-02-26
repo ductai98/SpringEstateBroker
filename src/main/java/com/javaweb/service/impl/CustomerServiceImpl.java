@@ -4,6 +4,7 @@ import com.javaweb.converter.CustomerConverter;
 import com.javaweb.entity.CustomerEntity;
 import com.javaweb.entity.UserEntity;
 import com.javaweb.model.dto.CustomerDTO;
+import com.javaweb.model.response.StaffResponseDTO;
 import com.javaweb.repository.CustomerRepository;
 import com.javaweb.repository.UserRepository;
 import com.javaweb.service.CustomerService;
@@ -84,5 +85,38 @@ public class CustomerServiceImpl implements CustomerService {
         List<CustomerEntity> entities = customerRepository.findByIdIn(ids);
         entities.forEach(entity -> entity.setStatus(0L));
         customerRepository.saveAll(entities);
+    }
+
+    @Override
+    public List<StaffResponseDTO> getStaffs(Long customerId) {
+        CustomerEntity customerEntity = customerRepository.findById(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found, id = " + customerId + " ! "));
+
+        List<UserEntity> staffs = customerEntity.getStaffs();
+        List<UserEntity> allStaffs = userRepository.findByStatusAndRolesCode(1, "STAFF");
+
+        List<StaffResponseDTO> result = new ArrayList<>();
+        for(UserEntity item : allStaffs){
+            StaffResponseDTO staffResponseDTO = new StaffResponseDTO();
+            staffResponseDTO.setStaffId(item.getId());
+            staffResponseDTO.setFullName(item.getFullName());
+            if (staffs.stream().anyMatch(e -> e.getId().equals(item.getId()))){
+                staffResponseDTO.setChecked("checked");
+            } else {
+                staffResponseDTO.setChecked("");
+            }
+            result.add(staffResponseDTO);
+        }
+        return result;
+    }
+
+    @Override
+    public CustomerDTO assignStaffs(Long customerId, List<Long> staffIds) {
+        CustomerEntity customerEntity = customerRepository.findById(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+        List<UserEntity> staffs = userRepository.findByIdIn(staffIds);
+        customerEntity.setStaffs(staffs);
+        customerRepository.save(customerEntity);
+        return customerConverter.toCustomerDTO(customerEntity);
     }
 }

@@ -1,7 +1,9 @@
 package com.javaweb.repository;
 
 import com.javaweb.entity.BuildingEntity;
+import com.javaweb.entity.CustomerEntity;
 import com.javaweb.entity.UserEntity;
+import com.javaweb.model.response.StaffResponseDTO;
 import com.javaweb.repository.custom.UserRepositoryCustom;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,4 +23,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> , UserRe
     List<UserEntity> findByIdIn(List<Long> id);
 
     List<UserEntity> findByBuildingsContaining(BuildingEntity buildingEntity);
+
+    List<StaffResponseDTO> findByCustomers(List<CustomerEntity> customers);
 }

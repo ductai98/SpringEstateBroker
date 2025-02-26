@@ -12,4 +12,5 @@ import java.util.Optional;
 public interface CustomerRepository extends JpaRepository<CustomerEntity, Long>, CustomerRepositoryCustom {
     List<CustomerEntity> findAllByStaffsAndStatus(List<UserEntity> staffs, Long status);
     List<CustomerEntity> findByIdIn(Collection<Long> ids);
+    List<CustomerEntity> findByStaffs(List<UserEntity> staffs);
 }

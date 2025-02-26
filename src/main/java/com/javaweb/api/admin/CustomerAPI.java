@@ -1,7 +1,9 @@
 package com.javaweb.api.admin;
 
 import com.javaweb.model.dto.CustomerDTO;
+import com.javaweb.model.request.AssignRequest;
 import com.javaweb.model.response.ResponseDTO;
+import com.javaweb.model.response.StaffResponseDTO;
 import com.javaweb.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,5 +38,22 @@ public class CustomerAPI {
         responseDTO.setMessage("Customer deleted successfully");
 
         return ResponseEntity.ok(responseDTO);
+    }
+
+    @GetMapping("/{id}/staffs")
+    public ResponseDTO getStaffs(@PathVariable("id") Long id){
+        List<StaffResponseDTO> staffs = customerService.getStaffs(id);
+        ResponseDTO responseDTO = new ResponseDTO();
+        responseDTO.setData(staffs);
+        responseDTO.setMessage("success");
+        return responseDTO;
+    }
+
+    @PostMapping("assign")
+    public ResponseDTO assignStaff(@RequestBody AssignRequest request){
+        CustomerDTO buildingDTO = customerService.assignStaffs(request.getId(), request.getStaffIds());
+        ResponseDTO responseDTO = new ResponseDTO();
+        responseDTO.setData(buildingDTO);
+        return responseDTO;
     }
 }

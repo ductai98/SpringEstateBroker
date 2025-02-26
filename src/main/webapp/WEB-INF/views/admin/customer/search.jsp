@@ -298,11 +298,11 @@
   $('#btnAssign').click(function (e) {
     e.preventDefault();
     var data = {};
-    data['customerId'] = $('#customerId').val();
+    data['id'] = $('#customerId').val();
     var staffs = $('#staff-list').find('tbody input[type = checkbox]:checked').map(function () {
       return $(this).val();
     }).get();
-    data['staffs'] = staffs;
+    data['staffIds'] = staffs;
 
     $.ajax({
       url: "/api/customer/assign",

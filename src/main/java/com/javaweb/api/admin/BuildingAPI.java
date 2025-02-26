@@ -3,7 +3,7 @@ package com.javaweb.api.admin;
 
 import com.javaweb.model.dto.BuildingDTO;
 import com.javaweb.model.request.BuildingAddOrUpdateRequest;
-import com.javaweb.model.request.BuildingAssignRequest;
+import com.javaweb.model.request.AssignRequest;
 import com.javaweb.model.response.ResponseDTO;
 import com.javaweb.model.response.StaffResponseDTO;
 import com.javaweb.service.BuildingService;
@@ -51,8 +51,8 @@ public class BuildingAPI {
     }
 
     @PostMapping("assign")
-    public ResponseDTO assignStaff(@RequestBody BuildingAssignRequest request){
-        BuildingDTO buildingDTO = buildingService.assignStaffs(request.getBuildingId(), request.getStaffs());
+    public ResponseDTO assignStaff(@RequestBody AssignRequest request){
+        BuildingDTO buildingDTO = buildingService.assignStaffs(request.getId(), request.getStaffIds());
         ResponseDTO responseDTO = new ResponseDTO();
         responseDTO.setData(buildingDTO);
         return responseDTO;
