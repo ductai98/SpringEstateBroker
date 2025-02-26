@@ -138,21 +138,29 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public TransactionDTO addTransaction(TransactionDTO transaction) {
-        Long userId = SecurityUtils.getPrincipal().getId();
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        CustomerEntity customer = customerRepository.findById(transaction.getCustomerId())
-                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
-
-        TransactionTypeEntity type = transactionTypeRepository.findById(transaction.getTypeId())
-                .orElseThrow(() -> new IllegalArgumentException("Transaction type not found"));
-
+        Long transactionId = transaction.getId();
         TransactionEntity transactionEntity = new TransactionEntity();
-        transactionEntity.setCustomer(customer);
-        transactionEntity.setStaff(user);
-        transactionEntity.setTransactionType(type);
-        transactionEntity.setNote(transaction.getNote());
+        if (transactionId == null) {
+            Long userId = SecurityUtils.getPrincipal().getId();
+            UserEntity user = userRepository.findById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+            CustomerEntity customer = customerRepository.findById(transaction.getCustomerId())
+                    .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+
+            TransactionTypeEntity type = transactionTypeRepository.findById(transaction.getTypeId())
+                    .orElseThrow(() -> new IllegalArgumentException("Transaction type not found"));
+            transactionEntity.setId(transaction.getId());
+            transactionEntity.setCustomer(customer);
+            transactionEntity.setStaff(user);
+            transactionEntity.setTransactionType(type);
+            transactionEntity.setNote(transaction.getNote());
+        } else {
+            transactionEntity = transactionRepository.findById(transactionId)
+                    .orElseThrow(() -> new IllegalArgumentException("Transaction not found"));
+            transactionEntity.setNote(transaction.getNote());
+        }
+
         transactionRepository.save(transactionEntity);
         TransactionDTO dto = transactionConverter.toTransactionDTO(transactionEntity);
         dto.setStaffId(transactionEntity.getStaff().getId());

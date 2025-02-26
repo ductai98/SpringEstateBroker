@@ -5,6 +5,7 @@ import com.javaweb.model.dto.TransactionDTO;
 import com.javaweb.model.request.AssignRequest;
 import com.javaweb.model.response.ResponseDTO;
 import com.javaweb.model.response.StaffResponseDTO;
+import com.javaweb.repository.TransactionService;
 import com.javaweb.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,9 @@ public class CustomerAPI {
 
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private TransactionService transactionService;
 
     @PostMapping
     public ResponseEntity<ResponseDTO> addOrUpdateCustomer(@RequestBody CustomerDTO request) {
@@ -63,6 +67,14 @@ public class CustomerAPI {
         TransactionDTO transactionDTO = customerService.addTransaction(transaction);
         ResponseDTO responseDTO = new ResponseDTO();
         responseDTO.setData(transactionDTO);
+        return responseDTO;
+    }
+
+    @DeleteMapping("/transaction")
+    public ResponseDTO deleteTransaction(@RequestBody TransactionDTO transaction){
+        transactionService.deleteById(transaction.getId());
+        ResponseDTO responseDTO = new ResponseDTO();
+        responseDTO.setData("Delete successfully");
         return responseDTO;
     }
 }

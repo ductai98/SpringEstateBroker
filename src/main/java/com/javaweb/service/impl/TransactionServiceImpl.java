@@ -47,4 +47,9 @@ public class TransactionServiceImpl implements TransactionService {
         transactions.forEach(transaction -> result.add(transactionConverter.toTransactionDTO(transaction)));
         return result;
     }
+
+    @Override
+    public void deleteById(Long id) {
+        transactionRepository.deleteById(id);
+    }
 }

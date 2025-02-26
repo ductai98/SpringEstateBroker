@@ -102,18 +102,19 @@
             </div>
           </div>
 
-          <security:authorize access="hasAnyRole('ADMIN', 'STAFF')">
-            <div class="pull-right" style="margin: -3px 0 0 0;">
-              <a href="/admin/customer-edit">
-                <button class="btn btn-sm btn-info" title="Thêm khách hàng">
-                  <i class="ace-icon fa fa-plus bigger-120"></i>
-                </button>
-              </a>
+          <div class="pull-right" style="margin: -3px 0 0 0;">
+            <a href="/admin/customer-edit">
+              <button class="btn btn-sm btn-info" title="Thêm khách hàng">
+                <i class="ace-icon fa fa-plus bigger-120"></i>
+              </button>
+            </a>
+            <security:authorize access="hasRole('ADMIN')">
               <button class="btn btn-sm btn-danger" title="Xóa khách hàng" id="btnDelete">
                 <i class="ace-icon fa fa-trash-o bigger-120"></i>
               </button>
-            </div>
-          </security:authorize>
+            </security:authorize>
+
+          </div>
 
         </div>
       </div>

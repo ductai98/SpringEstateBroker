@@ -132,9 +132,19 @@
                     <td>${transaction.createdBy}</td>
                     <td>${transaction.note}</td>
                     <td>
-                      <button class="btn btn-xs btn-danger" onclick="deleteTransaction(${transaction.id})">
-                        <i class="fa fa-trash"></i> Xóa
+                      <button
+                          class="btn btn-xs btn-info"
+                          title="Sua"
+                          onclick="updateTransaction(${transaction.id})">
+                        <i class="fa fa-pencil"></i> Sửa
                       </button>
+                      <security:authorize access="hasRole('ADMIN')">
+                        <button class="btn btn-xs btn-danger" onclick="deleteTransaction(${transaction.id})">
+                          <i class="fa fa-trash"></i> Xóa
+                        </button>
+                      </security:authorize>
+
+
                     </td>
                   </tr>
                 </c:forEach>
@@ -146,14 +156,21 @@
                     <td>${transaction.createdBy}</td>
                     <td>${transaction.note}</td>
                     <td>
-                      <button class="btn btn-xs btn-danger" onclick="deleteTransaction(${transaction.id})">
-                        <i class="fa fa-trash"></i> Xóa
+                      <button
+                          class="btn btn-xs btn-info"
+                          title="Sua"
+                          onclick="updateTransaction(${transaction.id})">
+                        <i class="fa fa-pencil"></i> Sửa
                       </button>
+                      <security:authorize access="hasRole('ADMIN')">
+                        <button class="btn btn-xs btn-danger" onclick="deleteTransaction(${transaction.id})">
+                          <i class="fa fa-trash"></i> Xóa
+                        </button>
+                      </security:authorize>
                     </td>
                   </tr>
                 </c:forEach>
               </c:if>
-
               </tbody>
             </table>
           </div>
@@ -186,7 +203,8 @@
       </div>
     </div>
   </div>
-  <hidden id="typeId" value="1"></hidden>
+  <hidden id="typeId" value=""></hidden>
+  <hidden id="transactionId" value=""></hidden>
 </div>
 
 <script>
@@ -246,22 +264,51 @@
 
     var customerId = $('#customerId').val();
     var typeId = $('#typeId').val();
+    var transactionId = $('#transactionId').val();
     var data = {};
 
     var details = $('#transactionDetails').val();
 
+    data['id'] = transactionId;
     data['customerId'] = customerId;
     data['note'] = details;
     data['typeId'] = typeId;
 
     if (details !== '' || details != null) {
       addTransactionDetails(data);
+      $('#customerId').val(null);
+      $('#typeId').val(null);
+      $('#transactionId').val(null);
     }
   });
 
   function addTransactionDetails(data) {
     $.ajax({
       type: "POST",
+      url: "${customer}" + "/transaction",
+      data: JSON.stringify(data),
+      contentType: "application/json",
+      dataType: "JSON",
+      success: function (response) {
+        console.log({"success": response});
+        location.reload();
+      },
+      error: function (error) {
+        console.log({"error": error});
+      }
+    });
+  }
+
+  function updateTransaction(transactionId) {
+    $('#transactionModal').modal();
+    $('#transactionId').val(transactionId);
+  }
+
+  function deleteTransaction(transactionId) {
+    var data = {};
+    data['id'] = transactionId;
+    $.ajax({
+      type: "DELETE",
       url: "${customer}" + "/transaction",
       data: JSON.stringify(data),
       contentType: "application/json",

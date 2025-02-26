@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface TransactionService {
     List<TransactionDTO> findByTypeAndCustomerId(String type, Long customerId);
+    void deleteById(Long id);
 }
