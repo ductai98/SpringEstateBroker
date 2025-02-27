@@ -86,6 +86,14 @@ public class CustomerServiceImpl implements CustomerService {
     public void addOrUpdateCustomer(CustomerDTO customer) {
         CustomerEntity entity = customerConverter.toCustomerEntity(customer);
 
+        if (customer.getStaffId() != null) {
+            UserEntity staff = userRepository.findById(customer.getStaffId())
+                   .orElseThrow(() -> new IllegalArgumentException("staff not found, staffId = " + customer.getStaffId() + " ! "));
+            List<UserEntity> staffs = new ArrayList<>();
+            staffs.add(staff);
+            entity.setStaffs(staffs);
+        }
+
         customerRepository.save(entity);
     }
 

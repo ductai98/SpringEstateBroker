@@ -45,7 +45,8 @@ public class BuildingController {
         BuildingRequestDTO buildingRequestDTO = buildingService.toBuildingRequestDTO(hashMap, typeCode);
         mav.addObject("searchModel", buildingRequestDTO);
         List<BuildingResponseDTO> responses;
-        if (SecurityUtils.getAuthorities().contains("ROLE_STAFF")) {
+        boolean isStaff = SecurityUtils.getAuthorities().stream().anyMatch(s -> s.contains("STAFF"));
+        if (isStaff) {
             Long staffId = SecurityUtils.getPrincipal().getId();
             hashMap.put("staffId", staffId);
             if (typeCode != null && !typeCode.isEmpty()) {

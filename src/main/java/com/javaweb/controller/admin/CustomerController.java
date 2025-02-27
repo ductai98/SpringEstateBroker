@@ -1,6 +1,5 @@
 package com.javaweb.controller.admin;
 
-import com.javaweb.enums.districtCode;
 import com.javaweb.model.dto.CustomerDTO;
 import com.javaweb.model.dto.TransactionDTO;
 import com.javaweb.model.dto.TransactionTypeDTO;
@@ -38,12 +37,13 @@ public class CustomerController {
     public ModelAndView customerSearchPage(@ModelAttribute("searchModel") CustomerDTO dto) {
         ModelAndView mav = new ModelAndView("admin/customer/search");
         List<CustomerDTO> customers;
-        if (SecurityUtils.getAuthorities().contains("STAFF")) {
+
+        boolean isStaff = SecurityUtils.getAuthorities().stream().anyMatch(s -> s.contains("STAFF"));
+        if (isStaff) {
             dto.setStaffId(SecurityUtils.getPrincipal().getId());
-            customers = customerService.getAll(dto.getStaffId());
-        } else {
-            customers = customerService.getAllCustomer(dto);
         }
+
+        customers = customerService.getAllCustomer(dto);
 
         mav.addObject("customers", customers);
         mav.addObject("staffs", userService.getStaffs());
@@ -52,11 +52,8 @@ public class CustomerController {
 
     @GetMapping(value = "/admin/customer-edit")
     public ModelAndView adminBuildingEdit(@ModelAttribute("customerInfo") CustomerDTO request, HttpServletRequest httpServletRequest) {
-        ModelAndView mav = new ModelAndView("admin/customer/edit");
 
-
-        mav.addObject("transactions", districtCode.type());
-        return mav;
+        return new ModelAndView("admin/customer/edit");
     }
 
     @GetMapping(value = "/admin/customer-edit-{id}")
@@ -76,9 +73,18 @@ public class CustomerController {
         }
 
         List<TransactionTypeDTO> transactionTypes = transactionTypeService.getAll();
+        List<TransactionDTO> careTransactions;
+        List<TransactionDTO> viewTransactions;
 
-        List<TransactionDTO> careTransactions = transactionService.findByTypeAndCustomerId("CARE", customerDTO.getId());
-        List<TransactionDTO> viewTransactions = transactionService.findByTypeAndCustomerId("VIEW", customerDTO.getId());;
+        boolean isStaff = SecurityUtils.getAuthorities().stream().anyMatch(s -> s.contains("STAFF"));
+        if (isStaff) {
+            Long staffId = SecurityUtils.getPrincipal().getId();
+            careTransactions = transactionService.findByTypeAndCustomerIdAndStaffId("CARE", customerDTO.getId(), staffId);
+            viewTransactions = transactionService.findByTypeAndCustomerIdAndStaffId("VIEW", customerDTO.getId(), staffId);
+        } else {
+            careTransactions = transactionService.findByTypeAndCustomerId("CARE", customerDTO.getId());
+            viewTransactions = transactionService.findByTypeAndCustomerId("VIEW", customerDTO.getId());
+        }
 
         mav.addObject("customerInfo", customerDTO);
         mav.addObject("transactionTypes", transactionTypes);

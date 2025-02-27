@@ -6,6 +6,7 @@ import com.javaweb.model.request.AssignRequest;
 import com.javaweb.model.response.ResponseDTO;
 import com.javaweb.model.response.StaffResponseDTO;
 import com.javaweb.repository.TransactionService;
+import com.javaweb.security.utils.SecurityUtils;
 import com.javaweb.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,11 @@ public class CustomerAPI {
     @PostMapping
     public ResponseEntity<ResponseDTO> addOrUpdateCustomer(@RequestBody CustomerDTO request) {
         request.setStatus("1");
+        boolean isStaff = SecurityUtils.getAuthorities().stream().anyMatch(s -> s.contains("STAFF"));
+        if (isStaff) {
+            request.setStaffId(SecurityUtils.getPrincipal().getId());
+        }
+
         customerService.addOrUpdateCustomer(request);
         ResponseDTO responseDTO = new ResponseDTO();
         responseDTO.setMessage("Customer added/updated successfully");
