@@ -221,7 +221,7 @@
     var phone = data.phone;
 
     if (phone === '' || phone == null) {
-      if (data.id == null) {
+      if (data.id == null || data.id === '') {
         window.location.href = "/admin/customer-edit?phone=required";
       } else {
         window.location.href = "/admin/customer-edit-" + data.id + "?phone=required";

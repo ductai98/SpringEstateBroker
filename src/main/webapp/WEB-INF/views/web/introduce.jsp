@@ -235,7 +235,7 @@
         <div class="container-fluid">
             <div class="top-footer text-center mt-0">
                 <div class="logo logo-footer pt-5">
-                    <a href="./ViewHome.html"><img src="https://bizweb.dktcdn.net/100/328/362/themes/894751/assets/logo_footer.png?1676257083798 alt="logo-footer"></a>
+                    <a href=""><img src="https://bizweb.dktcdn.net/100/328/362/themes/894751/assets/logo_footer.png?1676257083798 alt="logo-footer"></a>
                     <p class="desc-logo-footer mt-3">Với hơn 10 năm kinh nghiệm, SkyLand tự hào là sàn
                         mua
                         bán, giao dịch và quảng cáo
